@@ -9,8 +9,7 @@ namespace Library
     public class Player
     {
         int id;
-        string name;
-        List<Card> hand;
+        string name;        
         int gamesPlayed;
         int gamesWon;
         int gamesLost;
@@ -28,8 +27,7 @@ namespace Library
         public string Name { get => name; set => name = value; }
         public int GamesPlayed { get => gamesPlayed; set => gamesPlayed = value; }
         public int GamesWon { get => gamesWon; set => gamesWon = value; }
-        public int GamesLost { get => gamesLost; set => gamesLost = value; }
-        public List<Card> Hand { get => hand; set => hand = value; }
+        public int GamesLost { get => gamesLost; set => gamesLost = value; }        
 
         public override string ToString()
         {

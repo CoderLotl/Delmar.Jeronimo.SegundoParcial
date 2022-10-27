@@ -23,7 +23,23 @@ namespace Library
 
     public abstract class Game
     {
-        public virtual void Play(Room room, string text) { }
+        string log;
+        int playerOneScore;
+        int playerTwoScore;
+        int match;
+        int turn;
+
+        //----------------------------------------
+
+        public string Log { get => log; set => log = value; }        
+        public int PlayerOneScore { get => playerOneScore; set => playerOneScore = value; }
+        public int PlayerTwoScore { get => playerTwoScore; set => playerTwoScore = value; }
+        public int Match { get => match; set => match = value; }
+        public int Turn { get => turn; set => turn = value; }
+
+        //----------------------------------------
+
+        public virtual void Play(string text) { }
 
         public abstract void EndGame();
         

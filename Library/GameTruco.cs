@@ -17,48 +17,29 @@ namespace Library
 
     public class GameTruco : Game, ICardGame
     {
-        // --- DECK
-        List<Card> deck;
-        List<Card> stack;
-        List<Card> playedPlayerOne;
-        List<Card> playedPlayerTwo;
-        // --- DATA
-        int playerOneScore;
-        int playerTwoScore;
-        int match;
-        int turn;
         // --- CALLS FLAGS
-        int truco;
-        int reTruco;
-        int valeCuatro;
-        int envido;
-        int realEnvido;
-        int faltaEnvido;
-        int flor;
+        bool truco;
+        bool reTruco;
+        bool valeCuatro;
+        bool envido;
+        bool realEnvido;
+        bool faltaEnvido;
+        bool flor;
 
-
-        public List<Card> Deck { get => deck; set => deck = value; }
+        public List<Card> Deck { get; set; }
+        public List<Card> HandPlayerOne { get; set; }
+        public List<Card> HandPlayerTwo { get; set; }
+        public List<Card> PlayedPlayerOne { get; set; }
+        public List<Card> PlayedPlayerTwo { get; set; }
 
         public GameTruco()
-        {
-            this.deck = GenerateDeck();
-        }
-
-        public List<Card> ShuffleDeck(List<Card> deck)
-        {
-            List<Card> shuffledDeck = new List<Card>();
-            Random randomNumber = new Random();
-            int cards = deck.Count;
-
-            for (int i = 0; i < 40; i++)
-            {
-                int randomCard = randomNumber.Next(cards);
-                shuffledDeck.Add(deck[randomCard]);
-                deck.Remove(deck[randomCard]);
-                cards--;
-            }
-
-            return shuffledDeck;
+        {            
+            this.Deck = GenerateDeck();
+            this.Log = "";
+            this.PlayerOneScore = 0;
+            this.PlayerTwoScore = 0;
+            this.Turn = 0;
+            this.Match = 0;
         }
 
         public List<Card> GenerateDeck()
@@ -84,6 +65,23 @@ namespace Library
             }
 
             return newDeck;
+        }
+
+        public List<Card> ShuffleDeck(List<Card> deck)
+        {
+            List<Card> shuffledDeck = new List<Card>();
+            Random randomNumber = new Random();
+            int cards = deck.Count;
+
+            for (int i = 0; i < 40; i++)
+            {
+                int randomCard = randomNumber.Next(cards);
+                shuffledDeck.Add(deck[randomCard]);
+                deck.Remove(deck[randomCard]);
+                cards--;
+            }
+
+            return shuffledDeck;
         }
 
         private static int CalculateRelativeValue(int rank, Suit suit)
@@ -136,16 +134,16 @@ namespace Library
             return relativeValue;
         }
 
-        public void DrawCard(Player player, List<Card> deck)
+        public void DrawCard(List<Card> playerCards, List<Card> deck)
         {
             if (deck.Count > 0)
             {
-                player.Hand.Add(deck[0]);
+                playerCards.Add(deck[0]);
                 deck.Remove(deck[0]);
             }
         }
 
-        public void GiveCards(List<Card> deck, Player player)
+        public void GiveCards(List<Card> deck, List<Card> playerCards)
         {
             Random dice = new Random();
             int cards = deck.Count;
@@ -154,7 +152,7 @@ namespace Library
             {
                 int cardNumber = dice.Next(cards);
 
-                player.Hand.Add(deck[cardNumber]);
+                playerCards.Add(deck[cardNumber]);
                 deck.Remove(deck[cardNumber]);
                 cards--;
             }
@@ -167,21 +165,21 @@ namespace Library
 
         public override void EndGame()
         {
-            foreach(Card card in this.stack)
-            {
-                deck.Add(card);
-            }
-            this.stack.Clear();
+            this.PlayedPlayerOne.ForEach(card => this.Deck.Add(card));
+            this.PlayedPlayerOne.Clear();
+            this.PlayedPlayerOne.ForEach(card => this.Deck.Add(card));
+            this.PlayedPlayerTwo.Clear();
+            
         }
 
-        public override void Play(Room room, string Text)
+        public override void Play(string Text)
         {
             StringBuilder str = new StringBuilder();
 
             for (int i = 0; i < 20; i++)
             {
                 str.AppendLine(Text);
-                room.Log = str.ToString();
+                this.Log = str.ToString();
                 Thread.Sleep(2000);
             }
         }
@@ -205,10 +203,10 @@ namespace Library
             }
 
             // --- START
-            this.deck = ShuffleDeck(this.deck); // DECK SHUFFLING
+            this.Deck = ShuffleDeck(this.Deck); // DECK SHUFFLING
 
-            GiveCards(this.deck, playerOne);
-            GiveCards(this.deck, playerTwo);
+            GiveCards(this.Deck, this.HandPlayerOne);
+            GiveCards(this.Deck, this.HandPlayerTwo);
 
 
 

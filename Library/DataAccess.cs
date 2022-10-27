@@ -13,12 +13,11 @@ namespace Library
         public static void GetPlayers(Action<string> action)
         {
             List<Player> playerList = new List<Player>();
+            string connectionString = "Server=ARIS-PC\\SERVIDORPARCIAL;Database=Parcial;Trusted_Connection=True;TrustServerCertificate=True";
+            SqlConnection connection = new SqlConnection(connectionString);
 
             try
             {
-                string connectionString = "Server=ARIS-PC\\SERVIDORPARCIAL;Database=Parcial;Trusted_Connection=True;TrustServerCertificate=True";
-                SqlConnection connection = new SqlConnection(connectionString);
-
                 connection.Open();
 
                 SqlCommand sqlCommand = new SqlCommand();
@@ -41,11 +40,6 @@ namespace Library
                     playerList.Add(newPlayer);
                 }
 
-                if (connection.State == System.Data.ConnectionState.Open)
-                {
-                    connection.Close();
-                }
-
                 GameMechanics.players = playerList;
                 action("Database loaded successfully.");
             }
@@ -61,17 +55,23 @@ namespace Library
                 }
                 GameMechanics.players = playerList;
                 action("Unable to connect with Database.\nLoading mock bots...");
-            }            
+            }
+            finally
+            {
+                if (connection.State == System.Data.ConnectionState.Open)
+                {
+                    connection.Close();
+                }
+            }
         }
 
 
         public static void WritePlayers(Player player)
         {
+            string connectionString = "Server=ARIS-PC\\SERVIDORPARCIAL;Database=Parcial;Trusted_Connection=True;TrustServerCertificate=True";
+            SqlConnection connection = new SqlConnection(connectionString);
             try
             {
-                string connectionString = "Server=ARIS-PC\\SERVIDORPARCIAL;Database=Parcial;Trusted_Connection=True;TrustServerCertificate=True";
-                SqlConnection connection = new SqlConnection(connectionString);
-
                 connection.Open();
 
                 SqlCommand sqlCommand = new SqlCommand();
@@ -96,16 +96,22 @@ namespace Library
             {
 
             }
+            finally
+            {
+                if (connection.State == System.Data.ConnectionState.Open)
+                {
+                    connection.Close();
+                }
+            }
 
         }
 
         public static void UpdatePlayer(Player player)
         {
+            string connectionString = "Server=ARIS-PC\\SERVIDORPARCIAL;Database=Parcial;Trusted_Connection=True;TrustServerCertificate=True";
+            SqlConnection connection = new SqlConnection(connectionString);
             try
             {
-                string connectionString = "Server=ARIS-PC\\SERVIDORPARCIAL;Database=Parcial;Trusted_Connection=True;TrustServerCertificate=True";
-                SqlConnection connection = new SqlConnection(connectionString);
-
                 connection.Open();
 
                 SqlCommand sqlCommand = new SqlCommand();
@@ -129,6 +135,13 @@ namespace Library
             catch
             {
 
+            }
+            finally
+            {
+                if (connection.State == System.Data.ConnectionState.Open)
+                {
+                    connection.Close();
+                }
             }
 
         }

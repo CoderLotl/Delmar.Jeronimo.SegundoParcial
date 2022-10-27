@@ -10,8 +10,7 @@ namespace Library
     public class Room
     {
         string name;
-        List<Player> players;
-        string log;        
+        List<Player> players;             
         Game newGame;
         Task newTask;
         bool GameIsFinished;
@@ -21,21 +20,17 @@ namespace Library
             this.name = name + " | Game type: "+ gameType + " | Game sub-type: " + gameSubType;
             // --- SETTING THE PLAYERS
             this.players = new List<Player>();
-            this.players.Add(player1); this.players.Add(player2);
-            // --- SETTING THE LOG
-            this.log = "";
-
+            this.players.Add(player1); this.players.Add(player2);            
             this.GameIsFinished = false;
             // --- SETTING THE GAME BY THE TYPE AND SUBTYPE
             this.newGame = InitializeGame(gameType, gameSubType);
             // --- STARTING A GAME
-            this.newTask = new Task(() => this.newGame.Play(this, Text));
+            this.newTask = new Task(() => this.newGame.Play(Text));
             newTask.Start();
         }
 
         public string Name { get => name; }        
-        public List<Player> Players { get => players; set => players = value; }
-        public string Log { get => log; set => log = value; }
+        public List<Player> Players { get => players; set => players = value; }        
         public Task NewTask { get => newTask; set => newTask = value; }
         public Game NewGame { get => newGame; set => newGame = value; }
         public bool GameFinished { get => GameIsFinished; set => GameIsFinished = value; }

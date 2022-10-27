@@ -21,7 +21,7 @@ namespace Main
         {
             InitializeComponent();
             this.room = room;
-            richTextBox1.Text = room.Log;            
+            richTextBox1.Text = room.NewGame.Log;            
             refresh = new Task(RefreshTxtBox);
             refresh.Start();
         }
@@ -32,7 +32,7 @@ namespace Main
             {
                 if (richTextBox1.InvokeRequired)
                 {
-                    richTextBox1.Invoke(new MethodInvoker(delegate { richTextBox1.Text = room.Log; }));
+                    richTextBox1.Invoke(new MethodInvoker(delegate { richTextBox1.Text = room.NewGame.Log; }));
                     Thread.Sleep(1000);
                 }
             }
