@@ -15,32 +15,42 @@ namespace Main
     public partial class FrmLobby : Form
     {
         List<Room> rooms;
-        Action<string> Warning = (string text) => MessageBox.Show(text);
+        Action<string> Warning = (string text) => MessageBox.Show(text);        
+        Task Initialize;
 
         public FrmLobby()
         {
             InitializeComponent();
 
-            GameMechanics.InitializeLists(Warning);
+            // * * * * *
 
-            this.rooms = GameMechanics.rooms;
-            string[] text = { "Uno", "Dos", "Tres" };
-
-            for (int i = 0; i < 3; i++)
+            Initialize = new Task(() =>
             {
-                GameMechanics.AddTrucoRoom(text[i]);
-            }
+                GameMechanics.InitializeLists(Warning);
+                
+                for (int i = 0; i < 3; i++)
+                {
+                    GameMechanics.AddTrucoRoom();
+                }
 
-            GameMechanics.players[0].GamesPlayed = 0;
-            GameMechanics.players[2].GamesPlayed = 0;
+                treeView1.Invoke((MethodInvoker)(() => DrawTree(1)));
+                listBox1.Invoke((MethodInvoker)(() => DrawPlayersList()));
+            });
 
-            GameMechanics.players.ForEach(player => DataAccess.UpdatePlayer(player));
+            Initialize.Start();
         }
 
         private void FrmLobby_Load(object sender, EventArgs e)
         {
-            DrawTree(0);
-            DrawPlayersList();
+            try
+            {
+                DrawTree(0);
+                DrawPlayersList();
+            }
+            catch
+            {
+
+            }
         }
 
         private void DrawTree(int opt)
@@ -75,7 +85,7 @@ namespace Main
             foreach (Room room in GameMechanics.rooms)
             {
                 if (room.Name == e.Node.Text)
-                {
+                {                    
                     FrmRoom viewRoom = new FrmRoom(room);
                     viewRoom.Show();
                     break;
@@ -86,6 +96,7 @@ namespace Main
         private void UpdateInfo()
         {
             DrawTree(1);
+            DrawPlayersList();
         }
 
         private void treeView1_BeforeCollapse(object sender, TreeViewCancelEventArgs e)

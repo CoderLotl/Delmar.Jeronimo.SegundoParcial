@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace Library
@@ -24,10 +25,16 @@ namespace Library
     public abstract class Game
     {
         string log;
+        string cleanLog;
         int playerOneScore;
         int playerTwoScore;
         int match;
-        int turn;
+        int turn;       
+
+        private CancellationTokenSource cancelToken;
+
+
+        public abstract event EventHandler NotifyLogUpdate;
 
         //----------------------------------------
 
@@ -36,10 +43,15 @@ namespace Library
         public int PlayerTwoScore { get => playerTwoScore; set => playerTwoScore = value; }
         public int Match { get => match; set => match = value; }
         public int Turn { get => turn; set => turn = value; }
+        public string CleanLog { get => cleanLog; set => cleanLog = value; }
+        public CancellationTokenSource CancelToken { get => cancelToken; set => cancelToken = value; }
 
         //----------------------------------------
 
-        public virtual void Play(string text) { }
+        //public virtual void OldPlay(string text) { }
+
+        public abstract void Play(Player player1, Player player2);
+        public abstract void EndRound();
 
         public abstract void EndGame();
         

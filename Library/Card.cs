@@ -20,6 +20,5 @@ namespace Library
         public int Rank { get => rank; }
         public Suit Suit { get => suit; }
         public float RelativeRank { get => relativeRank; }
-
     }
 }

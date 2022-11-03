@@ -26,6 +26,6 @@ namespace Library
         List<Card> ShuffleDeck(List<Card> deck);
         void GiveCards(List<Card> deck, List<Card> playerCards);
         void DrawCard(List<Card> playerCards, List<Card> deck);
-        void PlayCard(Player player, List<Card> stack);
+        void PlayCard(Player player, List<Card> hand, List<Card> tableStack);
     }
 }

@@ -23,6 +23,11 @@ namespace Library
             this.gamesLost = gamesLost;
         }
 
+        public Player()
+        {
+
+        }
+
         public int Id { get => id; set => id = value; }
         public string Name { get => name; set => name = value; }
         public int GamesPlayed { get => gamesPlayed; set => gamesPlayed = value; }

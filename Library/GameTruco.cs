@@ -17,6 +17,8 @@ namespace Library
 
     public class GameTruco : Game, ICardGame
     {
+        // ********************* ☽
+
         // --- CALLS FLAGS
         bool truco;
         bool reTruco;
@@ -25,6 +27,11 @@ namespace Library
         bool realEnvido;
         bool faltaEnvido;
         bool flor;
+        int temporaryPoints;
+
+        public override event EventHandler NotifyLogUpdate;
+
+        // ********************* ☽
 
         public List<Card> Deck { get; set; }
         public List<Card> HandPlayerOne { get; set; }
@@ -32,18 +39,32 @@ namespace Library
         public List<Card> PlayedPlayerOne { get; set; }
         public List<Card> PlayedPlayerTwo { get; set; }
 
+        // ********************* ✩
+
         public GameTruco()
         {            
             this.Deck = GenerateDeck();
             this.Log = "";
+            this.CleanLog = "";
             this.PlayerOneScore = 0;
             this.PlayerTwoScore = 0;
+            this.HandPlayerOne = new List<Card>();
+            this.HandPlayerTwo = new List<Card>();
+            this.PlayedPlayerOne = new List<Card>();
+            this.PlayedPlayerTwo = new List<Card>();
+            this.CancelToken = new CancellationTokenSource();
             this.Turn = 0;
             this.Match = 0;
         }
 
+        // ********************* ✩
+
+        // --------------------------
+
         public List<Card> GenerateDeck()
         {
+            //SERIALIZE LOAD
+            
             List<Card> newDeck = new List<Card>();
 
             foreach (Suit suit in Enum.GetValues(typeof(Suit)))
@@ -64,8 +85,12 @@ namespace Library
                 }
             }
 
+            //SERIALIZE SAVE
+
             return newDeck;
         }
+
+        // --------------------------
 
         public List<Card> ShuffleDeck(List<Card> deck)
         {
@@ -83,6 +108,8 @@ namespace Library
 
             return shuffledDeck;
         }
+
+        // --------------------------
 
         private static int CalculateRelativeValue(int rank, Suit suit)
         {
@@ -134,6 +161,8 @@ namespace Library
             return relativeValue;
         }
 
+        // --------------------------
+
         public void DrawCard(List<Card> playerCards, List<Card> deck)
         {
             if (deck.Count > 0)
@@ -143,55 +172,82 @@ namespace Library
             }
         }
 
+        // --------------------------
+
         public void GiveCards(List<Card> deck, List<Card> playerCards)
-        {
-            Random dice = new Random();
+        {            
             int cards = deck.Count;
 
             for (int i = 0; i < 3; i++)
             {
-                int cardNumber = dice.Next(cards);
-
-                playerCards.Add(deck[cardNumber]);
-                deck.Remove(deck[cardNumber]);
+                playerCards.Add(deck[i]);
+                deck.Remove(deck[i]);
                 cards--;
             }
         }
 
-        public void PlayCard(Player player, List<Card> stack)
+        // --------------------------
+
+        public void PlayCard(Player player, List<Card> hand, List<Card> tableStack)
         {
             throw new NotImplementedException();
         }
 
-        public override void EndGame()
+        // --------------------------
+
+        public override void EndRound()
         {
             this.PlayedPlayerOne.ForEach(card => this.Deck.Add(card));
+            this.HandPlayerOne.ForEach(card => this.Deck.Add(card));
             this.PlayedPlayerOne.Clear();
+            this.HandPlayerOne.Clear();
+            
             this.PlayedPlayerOne.ForEach(card => this.Deck.Add(card));
+            this.HandPlayerTwo.ForEach(card => this.Deck.Add(card));
             this.PlayedPlayerTwo.Clear();
+            this.HandPlayerTwo.Clear();
             
         }
 
-        public override void Play(string Text)
-        {
-            StringBuilder str = new StringBuilder();
+        // --------------------------
 
-            for (int i = 0; i < 20; i++)
-            {
-                str.AppendLine(Text);
-                this.Log = str.ToString();
-                Thread.Sleep(2000);
-            }
+        public override void EndGame()
+        {
+            this.CancelToken.Cancel();
+            Announce(@" \b Ending the game... \b0\line");
+            NotifyLogUpdate?.Invoke(this, EventArgs.Empty);            
         }
 
-        private void RealPlay(Player player1, Player player2)
+        // --------------------------
+
+        public override void Play(Player player1, Player player2)
         {
             Player playerOne;
             Player playerTwo;
 
             // --- PRELIMINALS
 
-            if(ChoosePlayerOne() == 1)
+            ChoosePlayerOne(player1, player2, out playerOne, out playerTwo);
+
+            // --- START
+
+            while(this.Turn < 700 && this.CancelToken.IsCancellationRequested != true)
+            {
+                PlayRound(playerOne, playerTwo);
+                Thread.Sleep(2000);                
+            }
+            Announce(@" \b Game Finished. \b0\line");
+            NotifyLogUpdate?.Invoke(this, EventArgs.Empty);
+        }
+
+        // --------------------------
+
+        private void ChoosePlayerOne(Player player1, Player player2, out Player playerOne, out Player playerTwo)
+        {
+            Random coin = new Random();
+            int flipCoin = coin.Next(1, 3);
+
+            if(flipCoin == 1)
             {
                 playerOne = player1;
                 playerTwo = player2;
@@ -201,22 +257,81 @@ namespace Library
                 playerOne = player2;
                 playerTwo = player1;
             }
-
-            // --- START
-            this.Deck = ShuffleDeck(this.Deck); // DECK SHUFFLING
-
-            GiveCards(this.Deck, this.HandPlayerOne);
-            GiveCards(this.Deck, this.HandPlayerTwo);
-
-
-
         }
 
-        private int ChoosePlayerOne()
+        // --------------------------
+
+        private void Announce(string text)
         {
-            Random coin = new Random();
-
-            return coin.Next(1, 3);
+            this.CleanLog += text;
+            this.Log = "";
+            this.Log += @"{\rtf1\ansi" + CleanLog+ @"}";
         }
+
+        // ----------------------------------------------------
+        // -------------------------- [ GAME LOGIC ]
+        //----------------------------------------------------
+
+        private void ResetAll()
+        {
+            this.truco = this.reTruco = this.valeCuatro = this.envido = this.realEnvido = this.faltaEnvido = this.flor = false;
+            this.temporaryPoints = 0;
+        }
+
+        //----------------------------------------------------
+
+        private void PlayRound(Player player1, Player player2)
+        {
+            this.Turn++; //+1 TO THE TURNS
+
+            Announce(@" \b Round " + this.Turn + @"\b0.\line\line"); // I ANNOUNCE THE START OF THE TURN
+
+            Thread.Sleep(1000); // A SHORT PAUSE
+            NotifyLogUpdate?.Invoke(this, EventArgs.Empty); // I TRIGGER THE NOTIFY EVENT
+
+            Announce(@" \b Shuffling the deck... \b0\line\line"); // I ANNOUNCE THE DECK SHUFFLING
+            this.Deck = ShuffleDeck(this.Deck); // DECK SHUFFLING ITSELF
+            Thread.Sleep(1000);// SHORT PAUSE
+            NotifyLogUpdate?.Invoke(this, EventArgs.Empty); // NOTIFY
+
+            Announce(@" \b Giving cards... \b0\line\line");
+            GiveCards(this.Deck, this.HandPlayerOne);
+            GiveCards(this.Deck, this.HandPlayerTwo); // I GIVE THE CARDS TO THE PLAYERS
+            Thread.Sleep(1000);
+            NotifyLogUpdate?.Invoke(this, EventArgs.Empty); // NOTIFY AGAIN
+
+            Announce(@" \b " + player1.Name + @" \b0 got 3 cards.\line The \b " + HandPlayerOne[0].Rank.ToString() + @" \b0 of \b " + HandPlayerOne[0].Suit.ToString() + @"\b0, the \b " + HandPlayerOne[1].Rank.ToString() +
+                @" \b0 of \b " + HandPlayerOne[1].Suit.ToString() + @"\b0, and the \b " + HandPlayerOne[2].Rank.ToString() + @" \b0 of \b " + HandPlayerOne[2].Suit.ToString() + @" \b0.\line\line");
+
+            Thread.Sleep(1000);
+            NotifyLogUpdate?.Invoke(this, EventArgs.Empty);
+
+            Announce(@" \b " + player2.Name + @" \b0 got 3 cards.\line The \b " + HandPlayerTwo[0].Rank.ToString() + @" \b0 of \b " + HandPlayerTwo[0].Suit.ToString() + @"\b0, the \b " + HandPlayerTwo[1].Rank.ToString() +
+                @" \b0 of \b " + HandPlayerTwo[1].Suit.ToString() + @"\b0, and the \b " + HandPlayerTwo[2].Rank.ToString() + @" \b0 of \b " + HandPlayerTwo[2].Suit.ToString() + @" \b0.\line\line");
+
+            Thread.Sleep(1000);
+            NotifyLogUpdate?.Invoke(this, EventArgs.Empty);
+
+
+            for (int i = 0; i < 3; i++)
+            {
+                PlayTurnOfPlayer(player1, HandPlayerOne, PlayedPlayerOne);
+                PlayTurnOfPlayer(player2, HandPlayerTwo, PlayedPlayerTwo);
+            }
+            
+            EndRound(); // ALL CARTS RETURN TO THE DECK
+            Announce(@"----------------------------------------------------------- \line");            
+        }
+
+        private void PlayTurnOfPlayer(Player player, List<Card> hand, List<Card> tableStack)
+        {
+            //envido check
+
+            //truco check
+
+            //PlayCard(player, hand, tableStack);
+
+        }
+
     }
 }

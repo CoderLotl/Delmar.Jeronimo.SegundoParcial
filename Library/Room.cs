@@ -12,20 +12,25 @@ namespace Library
         string name;
         List<Player> players;             
         Game newGame;
-        Task newTask;
+        Task newTask;        
         bool GameIsFinished;
+        DataAccess newSQLConnection;
 
-        public Room(string name, Player player1, Player player2,string Text, GameType gameType, GameSubType gameSubType)
+        public Room(string name, Player player1, Player player2, GameType gameType, GameSubType gameSubType)
         {
             this.name = name + " | Game type: "+ gameType + " | Game sub-type: " + gameSubType;
             // --- SETTING THE PLAYERS
             this.players = new List<Player>();
             this.players.Add(player1); this.players.Add(player2);            
             this.GameIsFinished = false;
+
+            this.newSQLConnection = new DataAccess();
+
             // --- SETTING THE GAME BY THE TYPE AND SUBTYPE
             this.newGame = InitializeGame(gameType, gameSubType);
             // --- STARTING A GAME
-            this.newTask = new Task(() => this.newGame.Play(Text));
+            
+            this.newTask = new Task(() => this.newGame.Play(player1, player2));
             newTask.Start();
         }
 
@@ -49,6 +54,16 @@ namespace Library
 
             return newGame;
         }
+
+        public void EndGame()
+        {
+            // STOP THE TASK HERE
+            //this.newTask
+        }
+
+        //public event LogUpdate LogUpdated;
+        //public event NotificadorCambioTiempo SegundoCambiado;
+
 
     }
 }

@@ -15,27 +15,37 @@ namespace Main
     public partial class FrmRoom : Form
     {
         Room room;
-        Task refresh;
 
         public FrmRoom(Room room)
         {
             InitializeComponent();
             this.room = room;
             richTextBox1.Text = room.NewGame.Log;            
-            refresh = new Task(RefreshTxtBox);
-            refresh.Start();
+
+            room.NewGame.NotifyLogUpdate += RefreshTxtBox;
+
+            richTextBox1.Rtf = room.NewGame.Log;
+            richTextBox1.SelectionStart = richTextBox1.Text.Length;
+            richTextBox1.ScrollToCaret();
         }
 
-        private void RefreshTxtBox()
+        private void RefreshTxtBox(object? sender, EventArgs e)
         {
-            while(true)
-            {
-                if (richTextBox1.InvokeRequired)
-                {
-                    richTextBox1.Invoke(new MethodInvoker(delegate { richTextBox1.Text = room.NewGame.Log; }));
-                    Thread.Sleep(1000);
-                }
-            }
+
+            richTextBox1.Rtf = room.NewGame.Log;
+            richTextBox1.SelectionStart = richTextBox1.Text.Length;
+            richTextBox1.ScrollToCaret();
+            
+        }
+
+        private void FrmRoom_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            room.NewGame.NotifyLogUpdate -= RefreshTxtBox;
+        }
+
+        private void button1_Click(object sender, EventArgs e)
+        {
+            room.NewGame.EndGame();
         }
     }
 }

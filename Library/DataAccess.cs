@@ -8,9 +8,9 @@ using System.Threading.Tasks;
 
 namespace Library
 {
-    public static class DataAccess
+    public class DataAccess
     {
-        public static void GetPlayers(Action<string> action)
+        public void GetPlayers(Action<string> action)
         {
             List<Player> playerList = new List<Player>();
             string connectionString = "Server=ARIS-PC\\SERVIDORPARCIAL;Database=Parcial;Trusted_Connection=True;TrustServerCertificate=True";
@@ -42,6 +42,7 @@ namespace Library
 
                 GameMechanics.players = playerList;
                 action("Database loaded successfully.");
+                
             }
 
             catch
@@ -65,8 +66,9 @@ namespace Library
             }
         }
 
+        // --------------------------
 
-        public static void WritePlayers(Player player)
+        public void WritePlayers(Player player)
         {
             string connectionString = "Server=ARIS-PC\\SERVIDORPARCIAL;Database=Parcial;Trusted_Connection=True;TrustServerCertificate=True";
             SqlConnection connection = new SqlConnection(connectionString);
@@ -106,7 +108,9 @@ namespace Library
 
         }
 
-        public static void UpdatePlayer(Player player)
+        // --------------------------
+
+        public void UpdatePlayer(Player player)
         {
             string connectionString = "Server=ARIS-PC\\SERVIDORPARCIAL;Database=Parcial;Trusted_Connection=True;TrustServerCertificate=True";
             SqlConnection connection = new SqlConnection(connectionString);
@@ -146,5 +150,36 @@ namespace Library
 
         }
 
+        // --------------------------
+        
+        public void SaveObjectToJSON<T>(T objectName, string name ) where T : class
+        {
+
+        }
+
+        // --------------------------
+
+        public void SaveListToJSON<T>(List<T> objectName, string name) where T : class
+        {
+
+        }
+
+        // --------------------------
+
+        public T SerializeObjectFromJSON<T>() where T : class
+        {
+            T returnThis = null;
+
+            return returnThis;
+        }
+
+        // --------------------------
+
+        public List<T> SerializeListFromJSON<T>() where T : class
+        {
+            List<T> returnThis = null;
+
+            return returnThis;
+        }
     }
 }
