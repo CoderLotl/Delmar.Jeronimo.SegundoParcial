@@ -35,6 +35,7 @@ namespace Library
 
 
         public abstract event EventHandler NotifyLogUpdate;
+        public abstract event EventHandler NotifyEndGame;
 
         //----------------------------------------
 
@@ -52,7 +53,6 @@ namespace Library
 
         public abstract void Play(Player player1, Player player2);
         public abstract void EndRound();
-
         public abstract void EndGame();
         
     }

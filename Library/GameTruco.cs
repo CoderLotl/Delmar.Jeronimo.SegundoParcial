@@ -30,6 +30,7 @@ namespace Library
         int temporaryPoints;
 
         public override event EventHandler NotifyLogUpdate;
+        public override event EventHandler NotifyEndGame;
 
         // ********************* ☽
 
@@ -63,29 +64,34 @@ namespace Library
 
         public List<Card> GenerateDeck()
         {
-            //SERIALIZE LOAD
-            
             List<Card> newDeck = new List<Card>();
+            JsonSerializer<List<Card>> jsonSerializer = new JsonSerializer<List<Card>>("TrucoDeck");
 
-            foreach (Suit suit in Enum.GetValues(typeof(Suit)))
+            newDeck = jsonSerializer.DeSerialize();
+
+            if (newDeck == null)
             {
-                for (int i = 0; i < 7; i++)
+                newDeck = new List<Card>();
+
+                foreach (Suit suit in Enum.GetValues(typeof(Suit)))
                 {
-                    int relativeValue = CalculateRelativeValue(i + 1, suit);
+                    for (int i = 0; i < 7; i++)
+                    {
+                        int relativeValue = CalculateRelativeValue(i + 1, suit);
 
-                    Card newCard = new Card(i + 1, relativeValue, suit);
-                    newDeck.Add(newCard);
+                        Card newCard = new Card(i + 1, relativeValue, suit);
+                        newDeck.Add(newCard);
+                    }
+                    for (int i = 10; i < 13; i++)
+                    {
+                        int relativeValue = CalculateRelativeValue(i, suit);
+
+                        Card newCard = new Card(i, relativeValue, suit);
+                        newDeck.Add(newCard);
+                    }
                 }
-                for (int i = 10; i < 13; i++)
-                {
-                    int relativeValue = CalculateRelativeValue(i, suit);
-
-                    Card newCard = new Card(i, relativeValue, suit);
-                    newDeck.Add(newCard);
-                }
-            }
-
-            //SERIALIZE SAVE
+                jsonSerializer.Serialize(newDeck);
+            }                        
 
             return newDeck;
         }
@@ -214,7 +220,7 @@ namespace Library
         public override void EndGame()
         {
             this.CancelToken.Cancel();
-            Announce(@" \b Ending the game... \b0\line");
+            Announce(@" \line\b\i [ Finishing the game after this round... ] \b0\i0\line\line");
             NotifyLogUpdate?.Invoke(this, EventArgs.Empty);            
         }
 
@@ -236,8 +242,12 @@ namespace Library
                 PlayRound(playerOne, playerTwo);
                 Thread.Sleep(2000);                
             }
-            Announce(@" \b Game Finished. \b0\line");
+            Announce(@" \b\i Game Finished. \i0\b0\line");
+            
             NotifyLogUpdate?.Invoke(this, EventArgs.Empty);
+            
+            NotifyEndGame?.Invoke(this, EventArgs.Empty);
+
         }
 
         // --------------------------

@@ -12,7 +12,10 @@ namespace Library
 
         public static List<Player> players;
         public static List<Room> rooms;
-        public static event EventHandler Notify;
+
+        public delegate void Notify();
+
+        public static event Notify NotifyUpdate;
 
         public static void InitializeLists(Action<string> warning)
         {
@@ -20,7 +23,9 @@ namespace Library
 
             newConnection.GetPlayers(warning);
 
-            rooms = new List<Room>();            
+            rooms = new List<Room>();
+
+            NotifyUpdate();     
         }
 
         public static void AddTrucoRoom()
@@ -41,6 +46,26 @@ namespace Library
             Room newRoom = new Room(roomName, player1, player2, GameType.Cards, GameSubType.Truco);
 
             rooms.Add(newRoom);
-        }        
+        }
+
+        public static void AddTrucoRoom(Player player1, Player player2)
+        {
+            string roomName = "Room #" + (rooms.Count + 1).ToString();
+
+            Room newRoom = new Room(roomName, player1, player2, GameType.Cards, GameSubType.Truco);
+
+            rooms.Add(newRoom);
+        }
+
+        public static void RemoveTrucoRoom(int index, Action DrawTree)
+        {
+
+        }
+
+        public static void RemoveTrucoRoom(Room room, Action DrawTree)
+        {
+            rooms.Remove(room);
+            DrawTree();
+        }
     }
 }

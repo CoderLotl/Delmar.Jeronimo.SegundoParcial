@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Text.Json.Serialization;
 
 namespace Library
 {
@@ -9,16 +10,16 @@ namespace Library
         private int rank;
         private int relativeRank;
         private Suit suit;
-
-        public Card(int rank, int relativeRank, Suit suit)
+        
+        public Card(int Rank, int RelativeRank, Suit Suit)
         {
-            this.rank = rank;
-            this.relativeRank = relativeRank;
-            this.suit = suit;
+            this.rank = Rank;
+            this.relativeRank = RelativeRank;
+            this.suit = Suit;
         }
 
-        public int Rank { get => rank; }
-        public Suit Suit { get => suit; }
-        public float RelativeRank { get => relativeRank; }
+        public int Rank { get => rank; set => rank = value;  }
+        public Suit Suit { get => suit; set => suit = value; }
+        public int RelativeRank { get => relativeRank; set => relativeRank = value; }        
     }
 }

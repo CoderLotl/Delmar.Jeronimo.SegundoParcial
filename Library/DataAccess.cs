@@ -23,7 +23,8 @@ namespace Library
                 SqlCommand sqlCommand = new SqlCommand();
 
                 sqlCommand.CommandType = System.Data.CommandType.Text;
-                sqlCommand.CommandText = "SELECT * FROM Players";
+                sqlCommand.CommandText = "select Players.ID, Players.Name, Score.GamesPlayed, Score.GamesWon, Score.GamesLost" +
+                    " from Players inner join Score on Players.Name = Score.Name ";
                 sqlCommand.Connection = connection;
 
                 SqlDataReader reader = sqlCommand.ExecuteReader();
@@ -47,6 +48,7 @@ namespace Library
 
             catch
             {
+                action("Unable to connect with Database.\nLoading mock bots...");
                 string[] names = {"Ana-BOT", "Rob-BOT", "Laura-BOT", "Jhon-BOT", "Danara-BOT", "Luke-BOT" };
 
                 for (int i = 0; i < 6; i++)
@@ -55,7 +57,6 @@ namespace Library
                     playerList.Add(newPlayer);
                 }
                 GameMechanics.players = playerList;
-                action("Unable to connect with Database.\nLoading mock bots...");
             }
             finally
             {
@@ -151,35 +152,6 @@ namespace Library
         }
 
         // --------------------------
-        
-        public void SaveObjectToJSON<T>(T objectName, string name ) where T : class
-        {
 
-        }
-
-        // --------------------------
-
-        public void SaveListToJSON<T>(List<T> objectName, string name) where T : class
-        {
-
-        }
-
-        // --------------------------
-
-        public T SerializeObjectFromJSON<T>() where T : class
-        {
-            T returnThis = null;
-
-            return returnThis;
-        }
-
-        // --------------------------
-
-        public List<T> SerializeListFromJSON<T>() where T : class
-        {
-            List<T> returnThis = null;
-
-            return returnThis;
-        }
     }
 }

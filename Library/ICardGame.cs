@@ -18,10 +18,7 @@ namespace Library
         public List<Card> PlayedPlayerOne { get; set; }
         public List<Card> PlayedPlayerTwo { get; set; }
 
-        /// <summary>
-        /// GENERATES A DECK OF TOKENS
-        /// </summary>
-        /// <returns></returns>
+
         List<Card> GenerateDeck();
         List<Card> ShuffleDeck(List<Card> deck);
         void GiveCards(List<Card> deck, List<Card> playerCards);
