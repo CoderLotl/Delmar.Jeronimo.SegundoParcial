@@ -24,7 +24,7 @@ namespace Library
 
                 sqlCommand.CommandType = System.Data.CommandType.Text;
                 sqlCommand.CommandText = "select Players.ID, Players.Name, Score.GamesPlayed, Score.GamesWon, Score.GamesLost" +
-                    " from Players inner join Score on Players.Name = Score.Name ";
+                    " from Players inner join Score on Players.ID = Score.ID ";
                 sqlCommand.Connection = connection;
 
                 SqlDataReader reader = sqlCommand.ExecuteReader();
@@ -41,7 +41,7 @@ namespace Library
                     playerList.Add(newPlayer);
                 }
 
-                GameMechanics.players = playerList;
+                GameMechanics.Players = playerList;
                 action("Database loaded successfully.");
                 
             }
@@ -56,7 +56,7 @@ namespace Library
                     Player newPlayer = new Player(i + 1, names[i], 0, 0, 0);
                     playerList.Add(newPlayer);
                 }
-                GameMechanics.players = playerList;
+                GameMechanics.Players = playerList;
             }
             finally
             {
@@ -123,7 +123,7 @@ namespace Library
 
                 sqlCommand.CommandType = System.Data.CommandType.Text;
                 sqlCommand.Connection = connection;
-                sqlCommand.CommandText = "UPDATE Players SET gamesPlayed = @gamesPlayed, gamesWon = @gamesWon, gamesLost = @gamesLost WHERE ID = @id";
+                sqlCommand.CommandText = "UPDATE Score SET gamesPlayed = @gamesPlayed, gamesWon = @gamesWon, gamesLost = @gamesLost WHERE ID = @id";
 
                 sqlCommand.Parameters.AddWithValue("@gamesPlayed", player.GamesPlayed);
                 sqlCommand.Parameters.AddWithValue("@gamesWon", player.GamesWon);

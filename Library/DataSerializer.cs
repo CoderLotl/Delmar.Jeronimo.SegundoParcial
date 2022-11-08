@@ -13,6 +13,8 @@ namespace Library
             path += ".\\" + fileName;
         }
 
+        // - - - - - - - - - -
+
         public T DeSerialize()
         {
             T obj = new T();
@@ -28,6 +30,8 @@ namespace Library
             }
             return obj;
         }
+
+        // - - - - - - - - - -
 
         public bool Serialize(T objectName)
         {

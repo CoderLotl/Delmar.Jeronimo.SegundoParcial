@@ -64,7 +64,8 @@ namespace Library
 
         public List<Card> GenerateDeck()
         {
-            List<Card> newDeck = new List<Card>();
+            List<Card> newDeck;
+
             JsonSerializer<List<Card>> jsonSerializer = new JsonSerializer<List<Card>>("TrucoDeck");
 
             newDeck = jsonSerializer.DeSerialize();
@@ -82,9 +83,9 @@ namespace Library
                         Card newCard = new Card(i + 1, relativeValue, suit);
                         newDeck.Add(newCard);
                     }
-                    for (int i = 10; i < 13; i++)
+                    for (int i = 10; i < 13; i++) // 9 - 12
                     {
-                        int relativeValue = CalculateRelativeValue(i, suit);
+                        int relativeValue = CalculateRelativeValue(i, suit); // i+1
 
                         Card newCard = new Card(i, relativeValue, suit);
                         newDeck.Add(newCard);

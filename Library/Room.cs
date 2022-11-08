@@ -25,7 +25,7 @@ namespace Library
 
             this.gameConcluded = false;
 
-            this.newSQLConnection = new DataAccess();
+            this.newSQLConnection = new DataAccess(); // FOR SAVING LATER
 
             // --- SETTING THE GAME BY THE TYPE AND SUBTYPE
             this.newGame = InitializeGame(gameType, gameSubType);

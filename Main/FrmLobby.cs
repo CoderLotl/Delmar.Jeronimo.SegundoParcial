@@ -40,8 +40,17 @@ namespace Main
                     GameMechanics.rooms[i].NewGame.NotifyEndGame += EndGameHandler;                    
                 }
 
-                treeView1.Invoke((MethodInvoker)(() => DrawTree()));
-                listBox1.Invoke((MethodInvoker)(() => DrawPlayersList()));
+                if (InvokeRequired)
+                {
+                    treeView1.Invoke((MethodInvoker)(() => DrawTree()));
+                    listBox1.Invoke((MethodInvoker)(() => DrawPlayersList()));
+                }
+                else
+                {
+                    DrawTree();
+                    DrawPlayersList();
+                }
+
             });
 
             Initialize.Start();
@@ -186,7 +195,7 @@ namespace Main
 
         // = = = = = = = = =
 
-        private void TreeView_MouseDoubleClick(object sender, MouseEventArgs e)
+        private void ListBox_MouseDoubleClick(object sender, MouseEventArgs e)
         {
             int index = listBox1.IndexFromPoint(e.Location);
             if (index != System.Windows.Forms.ListBox.NoMatches)
@@ -214,9 +223,9 @@ namespace Main
 
         private void DrawPlayersList()
         {
-            if (GameMechanics.players != null)
+            if (GameMechanics.Players != null)
             {
-                foreach (Player player in GameMechanics.players)
+                foreach (Player player in GameMechanics.Players)
                 {
                     listBox1.DisplayMember = "name";
                     listBox1.Items.Add(player);
@@ -273,6 +282,24 @@ namespace Main
                 form.Dispose();
             }
             DrawTree();
+        }
+
+        private void button1_Click(object sender, EventArgs e)
+        {
+            FrmAddRoom frmAddRoom = new();
+            if(frmAddRoom.ShowDialog() == DialogResult.OK)
+            {
+                GameMechanics.rooms.Add(frmAddRoom.NewRoom);
+
+                FrmRoom frmRoom = new(frmAddRoom.NewRoom, DrawTree, this.FormClose);
+                frmRoom.Name = frmAddRoom.NewRoom.Name;
+                frmRoom.Text = frmAddRoom.NewRoom.Name + " | PLAYING";
+                frmRoom.Subscribe();
+
+                viewForms.Add(frmRoom);
+
+                DrawTree();
+            }
         }
     }
 }

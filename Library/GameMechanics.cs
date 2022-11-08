@@ -10,8 +10,10 @@ namespace Library
     public static class GameMechanics
     {
 
-        public static List<Player> players;
+        private static List<Player> players;
         public static List<Room> rooms;
+
+        public static List<Player> Players { get => players; set => players = value; }
 
         public delegate void Notify();
 
@@ -46,7 +48,7 @@ namespace Library
             Room newRoom = new Room(roomName, player1, player2, GameType.Cards, GameSubType.Truco);
 
             rooms.Add(newRoom);
-        }
+        }        
 
         public static void AddTrucoRoom(Player player1, Player player2)
         {

@@ -39,6 +39,12 @@ namespace Main
 
             this.FormClose = FormClose;
 
+            foreach(Player player in room.Players)
+            {
+                listBox1.DisplayMember = "name";
+                listBox1.Items.Add(player);
+            }
+
             Timer = new Task(() => this.StartTimer());
 
             richTextBox1.Rtf = room.NewGame.Log;
@@ -150,6 +156,15 @@ namespace Main
                 FormClose(this);
             }
             
+        }
+
+        private void ListBox_MouseDoubleClick(object sender, MouseEventArgs e)
+        {
+            int index = listBox1.IndexFromPoint(e.Location);
+            if (index != System.Windows.Forms.ListBox.NoMatches)
+            {
+                MessageBox.Show(listBox1.SelectedItem.ToString());
+            }
         }
     }
 }
