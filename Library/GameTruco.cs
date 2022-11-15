@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Library
 {
-    public enum Suit
+    public enum Suit // CARD'S SUITS
     {
         Cups,
         Golds,
@@ -21,12 +21,7 @@ namespace Library
 
         // --- CALLS FLAGS
         bool truco;
-        bool reTruco;
-        bool valeCuatro;
-        bool envido;
-        bool realEnvido;
-        bool faltaEnvido;
-        bool flor;
+        bool envido;        
         int temporaryPoints;
 
         public override event EventHandler NotifyLogUpdate;
@@ -76,21 +71,22 @@ namespace Library
 
                 foreach (Suit suit in Enum.GetValues(typeof(Suit)))
                 {
-                    for (int i = 0; i < 7; i++)
+                    for (int i = 1; i < 8; i++)
                     {
-                        int relativeValue = CalculateRelativeValue(i + 1, suit);
+                        int relativeValue = CalculateRelativeValue(i, suit);
 
-                        Card newCard = new Card(i + 1, relativeValue, suit);
+                        Card newCard = new Card(i, relativeValue, suit);
                         newDeck.Add(newCard);
                     }
-                    for (int i = 10; i < 13; i++) // 9 - 12
+                    for (int i = 10; i < 13; i++)
                     {
-                        int relativeValue = CalculateRelativeValue(i, suit); // i+1
+                        int relativeValue = CalculateRelativeValue(i, suit);
 
                         Card newCard = new Card(i, relativeValue, suit);
                         newDeck.Add(newCard);
                     }
                 }
+
                 jsonSerializer.Serialize(newDeck);
             }                        
 
@@ -103,17 +99,25 @@ namespace Library
         {
             List<Card> shuffledDeck = new List<Card>();
             Random randomNumber = new Random();
-            int cards = deck.Count;
-
-            for (int i = 0; i < 40; i++)
+            
+            if(deck != null)
             {
-                int randomCard = randomNumber.Next(cards);
-                shuffledDeck.Add(deck[randomCard]);
-                deck.Remove(deck[randomCard]);
-                cards--;
-            }
+                int cards = deck.Count;
 
-            return shuffledDeck;
+                for (int i = 0; i < 40; i++)
+                {
+                    int randomCard = randomNumber.Next(cards);
+                    shuffledDeck.Add(deck[randomCard]);
+                    deck.Remove(deck[randomCard]);
+                    cards--;
+                }
+
+                return shuffledDeck;
+            }
+            else
+            {
+                throw new ArgumentNullException("Argument is null");                
+            }
         }
 
         // --------------------------
@@ -213,7 +217,8 @@ namespace Library
             this.HandPlayerTwo.ForEach(card => this.Deck.Add(card));
             this.PlayedPlayerTwo.Clear();
             this.HandPlayerTwo.Clear();
-            
+
+            ResetAll();
         }
 
         // --------------------------
@@ -232,14 +237,11 @@ namespace Library
             Player playerOne;
             Player playerTwo;
 
-            // --- PRELIMINALS
-
-            ChoosePlayerOne(player1, player2, out playerOne, out playerTwo);
-
             // --- START
 
             while(this.Turn < 700 && this.CancelToken.IsCancellationRequested != true)
             {
+                ChoosePlayerOne(player1, player2, out playerOne, out playerTwo);
                 PlayRound(playerOne, playerTwo);
                 Thread.Sleep(2000);                
             }
@@ -285,7 +287,7 @@ namespace Library
 
         private void ResetAll()
         {
-            this.truco = this.reTruco = this.valeCuatro = this.envido = this.realEnvido = this.faltaEnvido = this.flor = false;
+            this.truco = this.envido = false;
             this.temporaryPoints = 0;
         }
 
@@ -294,8 +296,16 @@ namespace Library
         private void PlayRound(Player player1, Player player2)
         {
             this.Turn++; //+1 TO THE TURNS
+            bool winnerRound = false;
+            Player isHand = player1;
+            bool envidoCalled = false;
+            bool trucoCalled = false;
 
-            Announce(@" \b Round " + this.Turn + @"\b0.\line\line"); // I ANNOUNCE THE START OF THE TURN
+
+            // * * * * * * * * * * * * * *
+
+
+            Announce(@" \b Round " + this.Turn + @"\b0.\line\line"); // I ANNOUNCE THE START OF THE TURN            
 
             Thread.Sleep(1000); // A SHORT PAUSE
             NotifyLogUpdate?.Invoke(this, EventArgs.Empty); // I TRIGGER THE NOTIFY EVENT
@@ -324,24 +334,126 @@ namespace Library
             NotifyLogUpdate?.Invoke(this, EventArgs.Empty);
 
 
-            for (int i = 0; i < 3; i++)
+            // -----------------------------------------------------
+            // ------------------------- [ GAME STARTS ] * * * * * *
+            // -----------------------------------------------------
+
+            /*
+            while (winnerRound == false)
             {
-                PlayTurnOfPlayer(player1, HandPlayerOne, PlayedPlayerOne);
-                PlayTurnOfPlayer(player2, HandPlayerTwo, PlayedPlayerTwo);
-            }
+                if(isHand == player1)
+                {
+                    PlayTurnOfPlayer(player1, HandPlayerOne, PlayedPlayerOne, envidoCalled, trucoCalled);
+                    PlayTurnOfPlayer(player2, HandPlayerTwo, PlayedPlayerTwo, envidoCalled, trucoCalled);
+                    //Actualizar
+                }
+                else
+                {
+                    PlayTurnOfPlayer(player2, HandPlayerTwo, PlayedPlayerTwo, envidoCalled, trucoCalled);
+                    PlayTurnOfPlayer(player1, HandPlayerOne, PlayedPlayerOne, envidoCalled, trucoCalled);
+                    //Actualizar
+                }
+
+                //check winner of hand
+            } */             
+
+            
             
             EndRound(); // ALL CARTS RETURN TO THE DECK
             Announce(@"----------------------------------------------------------- \line");            
         }
 
-        private void PlayTurnOfPlayer(Player player, List<Card> hand, List<Card> tableStack)
+        private void PlayTurnOfPlayer(Player player, List<Card> hand, List<Card> tableStack, bool envidoCalled, bool trucoCalled)
         {
+            int envidoPoints = 0;
+
+            if(this.truco == false)
+            {
+                envidoPoints = CheckForEnvido(hand);
+
+            }
             //envido check
 
             //truco check
 
             //PlayCard(player, hand, tableStack);
 
+        }
+
+        private int CheckForEnvido(List<Card> hand)
+        {
+            int cups = 0;
+            int cupsEnvido = 0;
+            int swords = 0;
+            int swordsEnvido = 0;
+            int golds = 0;
+            int goldsEnvido = 0;
+            int clubs = 0;
+            int clubsEnvido = 0;
+
+            int points = 0;
+            bool envido = false;
+            
+
+            // - - - 
+
+            foreach(Card card in hand)
+            {
+                switch (card.Suit)
+                {
+                    case Suit.Cups:
+                        cups++;
+                        if (card.Rank <= 7)
+                        {
+                            cupsEnvido += card.Rank;
+                        }
+                        break;
+                    case Suit.Swords:
+                        swords++;
+                        if (card.Rank <= 7)
+                        {
+                            swordsEnvido += card.Rank;
+                        }
+                        break;
+                    case Suit.Golds:
+                        golds++;
+                        if (card.Rank <= 7)
+                        {
+                            goldsEnvido += card.Rank;
+                        }
+                        break;
+                    case Suit.Clubs:
+                        clubs++;
+                        if (card.Rank <= 7)
+                        {
+                            clubsEnvido += card.Rank;
+                        }
+                        break;
+                }
+            }
+
+            if( cups >= 2 || swords >= 2 || golds >= 2 || clubs >= 2)
+            {
+                if(cups >= 2)
+                {
+                    cupsEnvido += 20;
+                }
+                if(swords >= 2)
+                {
+                    swordsEnvido += 20;
+                }
+                if (golds >= 2)
+                {
+                    goldsEnvido += 20;
+                }
+                if (clubs >= 2)
+                {
+                    clubsEnvido += 20;
+                }
+                envido = true;
+            }
+
+            return points;
         }
 
     }

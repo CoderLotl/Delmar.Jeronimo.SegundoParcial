@@ -6,9 +6,6 @@ using System.Threading.Tasks;
 
 namespace Library
 {
-    /// <summary>
-    /// HERE ARE ALL THE MECHANICS COMMON TO ALL CARD GAMES.
-    /// </summary>
     public interface ICardGame
     {
 
@@ -17,7 +14,6 @@ namespace Library
         public List<Card> HandPlayerTwo { get; set; }
         public List<Card> PlayedPlayerOne { get; set; }
         public List<Card> PlayedPlayerTwo { get; set; }
-
 
         List<Card> GenerateDeck();
         List<Card> ShuffleDeck(List<Card> deck);

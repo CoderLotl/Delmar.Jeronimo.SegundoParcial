@@ -11,8 +11,7 @@ namespace Main
     public partial class FrmLobby : Form
     {
         // * * * * * * * * * * * * * * * *
-
-        List<Room> rooms; // THIS IS HERE ONLY FOR DEBUG PURPOSES
+                
         List<FrmRoom> viewForms;
         Action<string> Warning = (string text) => MessageBox.Show(text);
         Task Initialize;
@@ -34,23 +33,33 @@ namespace Main
 
                 GameMechanics.InitializeLists(Warning);
 
-                for (int i = 0; i < 1; i++)
-                {
-                    GameMechanics.AddTrucoRoom();
-                    GameMechanics.rooms[i].NewGame.NotifyEndGame += EndGameHandler;                    
-                }
+                Invoke((MethodInvoker)(() => Btn_CreateRoom.Enabled = true));
 
-                if (InvokeRequired)
+                for (int i = 0; i < 3; i++)
                 {
-                    treeView1.Invoke((MethodInvoker)(() => DrawTree()));
-                    listBox1.Invoke((MethodInvoker)(() => DrawPlayersList()));
-                }
-                else
-                {
-                    DrawTree();
-                    DrawPlayersList();
-                }
+                    try
+                    {
+                        GameMechanics.AddTrucoRoom();
+                    }
+                    catch (Exception exception)
+                    {
+                        MessageBox.Show(exception.Message);
+                        return;
+                    }
 
+                    GameMechanics.rooms[i].NewGame.NotifyEndGame += EndGameHandler;
+                    if (InvokeRequired)
+                    {
+                        Invoke((MethodInvoker)(() => DrawTree()));
+                        Invoke((MethodInvoker)(() => DrawPlayersList()));
+                    }
+                    else
+                    {
+                        DrawTree();
+                        DrawPlayersList();
+                    }
+                }
+                createViewForms = false;
             });
 
             Initialize.Start();
@@ -74,14 +83,21 @@ namespace Main
 
         private void Btn_EndGame_Click(object sender, EventArgs e)
         {
-            foreach (FrmRoom frmRoom in viewForms)
+            if (treeView1.SelectedNode != null)
             {
-                if (frmRoom.Text == treeView1.SelectedNode.Text)
+                if(treeView1.SelectedNode.Level == 1)
                 {
-                    frmRoom.Room.NewGame.EndGame();
-                    break;
+                    foreach (FrmRoom frmRoom in viewForms)
+                    {
+                        if (frmRoom.Text == treeView1.SelectedNode.Text)
+                        {
+                            frmRoom.Room.NewGame.EndGame();
+                            break;
+                        }
+                    }
                 }
             }
+
         }
 
         // - - - - - - - - - - - - - - - - [ METHODS ]
@@ -98,7 +114,7 @@ namespace Main
             if (createViewForms == true)
             {
                 CreateForms();
-                createViewForms = false;
+                //createViewForms = false;
             }
 
             if (InvokeRequired)
@@ -223,6 +239,7 @@ namespace Main
 
         private void DrawPlayersList()
         {
+            listBox1.Items.Clear();
             if (GameMechanics.Players != null)
             {
                 foreach (Player player in GameMechanics.Players)
@@ -250,28 +267,14 @@ namespace Main
 
         // = = = = = = = = =
 
-        private void FormClose(string roomName)
-        {
-            foreach (FrmRoom viewForm in viewForms)
-            {
-                if (viewForm.Name == roomName)
-                {
-                    Thread.Sleep(2000);
-                    Invoke(new MethodInvoker(delegate { viewForm.Close(); }));
-                    break;
-                }
-            }
-        }
-
-        // = = = = = = = = =
-
         private void FormClose(FrmRoom form)
         {
             GameMechanics.rooms.Remove(form.Room);
             viewForms.Remove(form);
             if (InvokeRequired)
             {
-                Invoke(new MethodInvoker(delegate {
+                Invoke(new MethodInvoker(delegate
+                {
                     form.Close();
                     form.Dispose();
                 }));
@@ -284,22 +287,30 @@ namespace Main
             DrawTree();
         }
 
-        private void button1_Click(object sender, EventArgs e)
+        private void Btn_CreateRoom_Click(object sender, EventArgs e)
         {
             FrmAddRoom frmAddRoom = new();
-            if(frmAddRoom.ShowDialog() == DialogResult.OK)
+            if (frmAddRoom.ShowDialog() == DialogResult.OK)
             {
                 GameMechanics.rooms.Add(frmAddRoom.NewRoom);
+                frmAddRoom.NewRoom.NewGame.NotifyEndGame += EndGameHandler;
 
-                FrmRoom frmRoom = new(frmAddRoom.NewRoom, DrawTree, this.FormClose);
-                frmRoom.Name = frmAddRoom.NewRoom.Name;
-                frmRoom.Text = frmAddRoom.NewRoom.Name + " | PLAYING";
-                frmRoom.Subscribe();
+                //-----
 
-                viewForms.Add(frmRoom);
+                CreateNewForm(frmAddRoom);
 
                 DrawTree();
             }
+        }
+
+        private void CreateNewForm(FrmAddRoom frmAddRoom)
+        {
+            FrmRoom frmRoom = new(frmAddRoom.NewRoom, DrawTree, this.FormClose);
+            frmRoom.Name = frmAddRoom.NewRoom.Name;
+            frmRoom.Text = frmAddRoom.NewRoom.Name + " | PLAYING";
+            frmRoom.Subscribe();
+
+            viewForms.Add(frmRoom);
         }
     }
 }

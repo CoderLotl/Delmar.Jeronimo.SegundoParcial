@@ -10,10 +10,10 @@ namespace Library
 {
     public class DataAccess
     {
-        public void GetPlayers(Action<string> action)
+        public void GetPlayers(Action<string> action, string connectionStringParam)
         {
             List<Player> playerList = new List<Player>();
-            string connectionString = "Server=ARIS-PC\\SERVIDORPARCIAL;Database=Parcial;Trusted_Connection=True;TrustServerCertificate=True";
+            string connectionString = connectionStringParam;
             SqlConnection connection = new SqlConnection(connectionString);
 
             try
@@ -46,7 +46,7 @@ namespace Library
                 
             }
 
-            catch
+            catch (Exception exception)
             {
                 action("Unable to connect with Database.\nLoading mock bots...");
                 string[] names = {"Ana-BOT", "Rob-BOT", "Laura-BOT", "Jhon-BOT", "Danara-BOT", "Luke-BOT" };

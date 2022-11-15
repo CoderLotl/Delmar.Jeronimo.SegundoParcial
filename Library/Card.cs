@@ -18,6 +18,11 @@ namespace Library
             this.suit = Suit;
         }
 
+        public Card()
+        {
+
+        }
+
         public int Rank { get => rank; set => rank = value;  }
         public Suit Suit { get => suit; set => suit = value; }
         public int RelativeRank { get => relativeRank; set => relativeRank = value; }        

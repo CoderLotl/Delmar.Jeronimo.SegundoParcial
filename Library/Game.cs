@@ -9,17 +9,12 @@ namespace Library
 {
     public enum GameType
     {
-        Cards,
-        Dices
+        Cards        
     }
 
     public enum GameSubType
-    {
-        Chinchon,
-        Truco,
-        Escoba,
-        Uno,
-        Generala
+    {        
+        Truco
     }
 
     public abstract class Game
@@ -48,9 +43,7 @@ namespace Library
         public CancellationTokenSource CancelToken { get => cancelToken; set => cancelToken = value; }
 
         //----------------------------------------
-
-        //public virtual void OldPlay(string text) { }
-
+        
         public abstract void Play(Player player1, Player player2);
         public abstract void EndRound();
         public abstract void EndGame();

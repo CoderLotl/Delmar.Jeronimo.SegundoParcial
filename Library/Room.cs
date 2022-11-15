@@ -31,8 +31,7 @@ namespace Library
             this.newGame = InitializeGame(gameType, gameSubType);
             // --- STARTING A GAME
             
-            this.newTask = new Task(() => this.newGame.Play(player1, player2));
-            newTask.Start();
+            this.newTask = Task.Run(() => this.newGame.Play(player1, player2));            
         }
 
         public string Name { get => name; }        

@@ -10,7 +10,7 @@ namespace Library
 
         public JsonSerializer(string fileName)
         {
-            path += ".\\" + fileName;
+            path = ".\\" + fileName;
         }
 
         // - - - - - - - - - -
@@ -20,12 +20,12 @@ namespace Library
             T obj = new T();
             try
             {
-                string jsonFile = File.ReadAllText(path + ".json");
+                string jsonFile = File.ReadAllText(path + ".json");                
 
                 obj = JsonSerializer.Deserialize<T>(jsonFile);
             }
             catch (Exception)
-            {
+            {                
                 return null;
             }
             return obj;
@@ -33,9 +33,8 @@ namespace Library
 
         // - - - - - - - - - -
 
-        public bool Serialize(T objectName)
+        public void Serialize(T objectName)
         {
-            bool returnValue = false;
             try
             {
                 JsonSerializerOptions options = new JsonSerializerOptions();
@@ -43,15 +42,12 @@ namespace Library
 
                 string json = JsonSerializer.Serialize(objectName, options);
 
-                File.WriteAllText(path + ".json", json);
-
-                returnValue = true;
+                File.WriteAllText(path + ".json", json);                                
             }
             catch (Exception)
             {
-                returnValue = false;
-            }
-            return returnValue;
+                throw new Exception("File inexistent.");
+            }            
         }
     }
 }
