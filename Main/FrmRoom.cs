@@ -119,7 +119,7 @@ namespace Main
 
         private void StartTimer()
         {
-            int timer = 5;
+            int timer = 120;
 
             if (InvokeRequired)
             {
