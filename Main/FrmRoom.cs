@@ -50,6 +50,8 @@ namespace Main
             richTextBox1.Rtf = room.NewGame.Log;
             richTextBox1.SelectionStart = richTextBox1.Text.Length;
             richTextBox1.ScrollToCaret();
+            lbl_P1Name.Text += room.Players[0].Name;
+            lbl_P2Name.Text += room.Players[1].Name;
         }
 
         private void RefreshTxtBox(object? sender, EventArgs e)
@@ -59,12 +61,16 @@ namespace Main
                 richTextBox1.Invoke(new MethodInvoker(delegate { richTextBox1.Rtf = room.NewGame.Log; }));
                 richTextBox1.Invoke(new MethodInvoker(delegate { richTextBox1.SelectionStart = richTextBox1.Text.Length; }));
                 richTextBox1.Invoke(new MethodInvoker(delegate { richTextBox1.ScrollToCaret();}));
+                lbl_P1Score.Invoke(new MethodInvoker(delegate { lbl_P1Score.Text = room.NewGame.PlayerOneScore.ToString(); }));
+                lbl_P2Score.Invoke(new MethodInvoker(delegate { lbl_P2Score.Text = room.NewGame.PlayerTwoScore.ToString(); }));
             }
             else
             {
                 richTextBox1.Rtf = room.NewGame.Log;
                 richTextBox1.SelectionStart = richTextBox1.Text.Length;
                 richTextBox1.ScrollToCaret();
+                lbl_P1Score.Text = room.NewGame.PlayerOneScore.ToString();
+                lbl_P2Score.Text = room.NewGame.PlayerTwoScore.ToString();
             }
         }
 
@@ -123,11 +129,11 @@ namespace Main
 
             if (InvokeRequired)
             {
-                Invoke(new MethodInvoker(delegate { label1.Visible = true; }));
+                Invoke(new MethodInvoker(delegate { lbl_Timer.Visible = true; }));
             }
             else
             {
-                label1.Visible = true;
+                lbl_Timer.Visible = true;
             }
             
 
@@ -135,11 +141,11 @@ namespace Main
             {
                 if (InvokeRequired)
                 {
-                    Invoke(new MethodInvoker(delegate { label1.Text = "This form is about to close in: " + (timer - i) + " seconds."; ; }));
+                    Invoke(new MethodInvoker(delegate { lbl_Timer.Text = "This form is about to close in: " + (timer - i) + " seconds."; ; }));
                 }
                 else
                 {
-                    label1.Text = "This form is about to close in: " + (timer - i) + " seconds.";
+                    lbl_Timer.Text = "This form is about to close in: " + (timer - i) + " seconds.";
                 }
                 
                 Thread.Sleep(1000);

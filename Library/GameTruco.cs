@@ -21,11 +21,6 @@ namespace Library
     {
         // ********************* ☽
 
-        // --- CALLS FLAGS
-        bool truco;
-        bool envido;        
-        int temporaryPoints;
-
         public override event EventHandler NotifyLogUpdate;
         public override event EventHandler NotifyEndGame;
 
@@ -226,9 +221,7 @@ namespace Library
             this.PlayedPlayerTwo.ForEach(card => this.Deck.Add(card));
             this.HandPlayerTwo.ForEach(card => this.Deck.Add(card));
             this.PlayedPlayerTwo.Clear();
-            this.HandPlayerTwo.Clear();
-
-            ResetAll();
+            this.HandPlayerTwo.Clear();            
         }
 
         // --------------------------
@@ -296,11 +289,6 @@ namespace Library
         // -------------------------- [ GAME LOGIC ]
         //----------------------------------------------------
 
-        private void ResetAll()
-        {
-            this.truco = this.envido = false;
-            this.temporaryPoints = 0;
-        }
 
         //----------------------------------------------------
 
@@ -332,9 +320,8 @@ namespace Library
             while (winnerRound == false && this.CancelToken.IsCancellationRequested != true)
             {
                 if (isHand == player1)
-                {
-                    lastToPlay = player2;
-                    PlayTurnOfPlayer(player1, player2, ref lastToPlay, 1, PlayedPlayerOne, ref envidoCalled, ref envidoWanted, ref trucoCalled, ref trucoWanted,
+                {                    
+                    PlayTurnOfPlayer(player1, player2, ref lastToPlay, isHand, 1, PlayedPlayerOne, ref envidoCalled, ref envidoWanted, ref trucoCalled, ref trucoWanted,
                         ref player1EnvidoPoints, ref player2EnvidoPoints, ref winnerRound, ref checkIsNeeded);
 
                     if (winnerRound == true)
@@ -342,18 +329,17 @@ namespace Library
                         break;
                     }
 
-                    PlayTurnOfPlayer(player1, player2, ref lastToPlay, 2, PlayedPlayerTwo, ref envidoCalled, ref envidoWanted, ref trucoCalled, ref trucoWanted,
+                    PlayTurnOfPlayer(player1, player2, ref lastToPlay, isHand, 2, PlayedPlayerTwo, ref envidoCalled, ref envidoWanted, ref trucoCalled, ref trucoWanted,
                         ref player1EnvidoPoints, ref player2EnvidoPoints, ref winnerRound, ref checkIsNeeded);
                     if (checkIsNeeded == true)
                     {
-                        CheckThisHandWinner(player1, player2, ref isHand, ref checkIsNeeded);
+                        CheckThisHandWinner(player1, player2, ref lastToPlay, ref isHand, ref checkIsNeeded, ref player1HandScore, ref player2HandScore, ref winnerRound, trucoWanted);
                     }
 
                 }
                 else
-                {
-                    lastToPlay = player1;
-                    PlayTurnOfPlayer(player1, player2, ref lastToPlay, 2, PlayedPlayerTwo, ref envidoCalled, ref envidoWanted, ref trucoCalled, ref trucoWanted,
+                {                    
+                    PlayTurnOfPlayer(player1, player2, ref lastToPlay, isHand, 2, PlayedPlayerTwo, ref envidoCalled, ref envidoWanted, ref trucoCalled, ref trucoWanted,
                         ref player1EnvidoPoints, ref player2EnvidoPoints, ref winnerRound, ref checkIsNeeded);
 
                     if (winnerRound == true)
@@ -361,16 +347,13 @@ namespace Library
                         break;
                     }
 
-                    PlayTurnOfPlayer(player1, player2, ref lastToPlay, 1, PlayedPlayerOne, ref envidoCalled, ref envidoWanted, ref trucoCalled, ref trucoWanted,
+                    PlayTurnOfPlayer(player1, player2, ref lastToPlay, isHand, 1, PlayedPlayerOne, ref envidoCalled, ref envidoWanted, ref trucoCalled, ref trucoWanted,
                         ref player1EnvidoPoints, ref player2EnvidoPoints, ref winnerRound, ref checkIsNeeded);
                     if (checkIsNeeded == true)
                     {
-                        CheckThisHandWinner(player2, player1, ref isHand, ref checkIsNeeded);
+                        CheckThisHandWinner(player2, player1, ref lastToPlay, ref isHand, ref checkIsNeeded, ref player1HandScore, ref player2HandScore, ref winnerRound, trucoWanted);
                     }
-
-                }
-
-                //check winner of hand
+                }                                
             }
 
             EndRound(); // ALL CARTS RETURN TO THE DECK
@@ -413,49 +396,114 @@ namespace Library
 
         // --------------------------
 
-        private void CheckThisHandWinner(Player player1, Player player2, ref Player isHand, ref bool checkIsNeeded)
+        private void CheckThisHandWinner(Player player1, Player player2, ref Player lastToPlay, ref Player isHand, ref bool checkIsNeeded,
+            ref int player1HandScore, ref int player2HandScore, ref bool winnerRound, int trucoWanted)
         {
             Card card1;
             Card card2;
 
             if(PlayedPlayerOne.Count > 0 && PlayedPlayerTwo.Count > 0)
             {
-                card1 = PlayedPlayerOne[PlayedPlayerOne.Count - 1];
+                card1 = PlayedPlayerOne[PlayedPlayerOne.Count - 1]; // FIND LAST CARD PLAYED.
                 card2 = PlayedPlayerTwo[PlayedPlayerTwo.Count - 1];
 
                 if(card1.RelativeRank > card2.RelativeRank)
                 {
                     Announce(@" The \b " + card1.Rank + @" \b0 of \b " + card1.Suit.ToString() + @" \b0 kills the \b " + card2.Rank + @" \b0 of \b " + card2.Suit.ToString() + @". \b0\line\line");
                     isHand = player1;
+                    player1HandScore++;
+                    lastToPlay = player2;
                     NotifyLogUpdate?.Invoke(this, EventArgs.Empty);
                     Thread.Sleep(1000);
                     Announce(@" " + player1.Name + @" is hand now. \line\line");
                     Announce(@"* * * * * * * * * * \line");
-                    Thread.Sleep(2000);
                     NotifyLogUpdate?.Invoke(this, EventArgs.Empty);
+                    Thread.Sleep(2000);
                 }
                 else if (card1.RelativeRank < card2.RelativeRank)
                 {
                     Announce(@" The \b " + card2.Rank + @" \b0 of \b " + card2.Suit.ToString() + @" \b0 kills the \b " + card1.Rank + @" \b0 of \b " + card1.Suit.ToString() + @". \b0\line\line");
                     isHand = player2;
+                    player2HandScore++;
+                    lastToPlay = player1;
                     NotifyLogUpdate?.Invoke(this, EventArgs.Empty);
                     Thread.Sleep(1000);
                     Announce(@" " + player2.Name + @" is hand now. \line\line");
                     Announce(@"* * * * * * * * * * \line");
-                    Thread.Sleep(2000);
                     NotifyLogUpdate?.Invoke(this, EventArgs.Empty);
+                    Thread.Sleep(2000);
                 }
                 else
                 {
+                    if(isHand == player1)
+                    {
+                        Announce(@" " + player1.Name + @" wins this one since they're Hand. \line\line");
+                        player1HandScore++;
+                        Announce(@"* * * * * * * * * * \line");
+                        NotifyLogUpdate?.Invoke(this, EventArgs.Empty);
+                        Thread.Sleep(2000);
+                    }
+                    else
+                    {
+                        Announce(@" " + player2.Name + @" wins this one since they're Hand. \line\line");
+                        player2HandScore++;
+                        Announce(@"* * * * * * * * * * \line");
+                        NotifyLogUpdate?.Invoke(this, EventArgs.Empty);
+                        Thread.Sleep(2000);
+                    }
+                }                
 
+                // - - - -
+
+                if(player1HandScore >= 2 || player2HandScore >= 2)
+                {
+                    if(player1HandScore >= 2)
+                    {
+                        Announce(@" \b " + player1.Name + @" wins this round.\b0\line\line");
+
+                        if (trucoWanted != 0)
+                        {
+                            this.PlayerOneScore+=2;
+                            Announce(@" \b +2pt for " + player1.Name + @"\b0\line\line");
+                        }
+                        else
+                        {
+                            this.PlayerOneScore++;
+                            Announce(@" \b +1pt for " + player1.Name + @"\b0\line\line");
+                        }
+
+                        winnerRound = true;
+                        NotifyLogUpdate?.Invoke(this, EventArgs.Empty);
+                        Thread.Sleep(2000);
+                    }
+                    else if(player2HandScore >= 2)
+                    {
+                        Announce(@" \b " + player2.Name + @" wins this round.\b0\line\line");
+
+                        if (trucoWanted != 0)
+                        {
+                            this.PlayerTwoScore+=2;
+                            Announce(@" \b +2pt for " + player2.Name + @"\b0\line\line");
+                        }
+                        else
+                        {
+                            this.PlayerTwoScore++;
+                            Announce(@" \b +1pt for " + player2.Name + @"\b0\line\line");
+                        }
+
+                        winnerRound = true;
+                        NotifyLogUpdate?.Invoke(this, EventArgs.Empty);
+                        Thread.Sleep(2000);
+                    }
                 }
+
                 checkIsNeeded = false;
             }
         }
 
         // --------------------------
 
-        private void PlayTurnOfPlayer(Player player1, Player player2, ref Player lastToPlay, int player, List<Card> tableStack,
+        private void PlayTurnOfPlayer(Player player1, Player player2, ref Player lastToPlay, Player isHand, int playerOrder, List<Card> tableStack,
             ref bool envidoCalled, ref int envidoWanted, ref bool trucoCalled, ref int trucoWanted, ref int player1EnvidoPoints,
             ref int player2EnvidoPoints, ref bool winnerRound, ref bool checkIsNeeded)
         {            
@@ -463,7 +511,7 @@ namespace Library
             Player oponent;
             List<Card> currentPlayerHand;
 
-            if (player == 1)
+            if (playerOrder == 1)
             {
                 currentPlayer = player1;
                 oponent = player2;
@@ -481,7 +529,7 @@ namespace Library
             if(envidoCalled == false || (envidoCalled == true && envidoWanted == 0)) // CHECK FOR ENVIDO
             {
                 CheckForEnvido(player1, player2, ref envidoCalled, ref envidoWanted, trucoCalled,
-                ref player1EnvidoPoints, ref player2EnvidoPoints, currentPlayer, oponent, ref checkIsNeeded);
+                ref player1EnvidoPoints, ref player2EnvidoPoints, currentPlayer, oponent, ref checkIsNeeded, isHand);
             }
             else // CHECK FOR TRUCO
             {
@@ -490,7 +538,7 @@ namespace Library
 
             // - - -
 
-            if(lastToPlay != currentPlayer)
+            if(lastToPlay != currentPlayer) // PLAY A CARD
             {
                 if ((trucoCalled == false || (trucoCalled == true && trucoWanted != 0)) && (envidoCalled == false || (envidoCalled == true && envidoWanted != 0)))
                 {                    
@@ -510,7 +558,7 @@ namespace Library
             Random randomNum = new Random();
             int callingChance = randomNum.Next(100);
 
-            if (trucoCalled == false && callingChance >= 100) // IF TRUCO HASN'T BEEN CALLED YET... THERE'S A CHANCE FOR THIS PLAYER TO CALL IT.
+            if (trucoCalled == false && callingChance >= 50) // IF TRUCO HASN'T BEEN CALLED YET... THERE'S A CHANCE FOR THIS PLAYER TO CALL IT.
             {
                 Call(currentPlayer, oponent, 2, ref trucoCalled, ref trucoWanted);
             }
@@ -532,9 +580,10 @@ namespace Library
                         this.PlayerOneScore++;
                     }
                     Announce(@" \b " + oponent.Name + @" wins this round.\b0\line\line");
+                    Announce(@" \b +1pt for " + oponent.Name + @"\b0\line\line");
                     winnerRound = true;
                     NotifyLogUpdate?.Invoke(this, EventArgs.Empty);
-                    Thread.Sleep(1000);
+                    Thread.Sleep(2000);
                 }
             }
         }
@@ -542,7 +591,7 @@ namespace Library
         // --------------------------
 
         private void CheckForEnvido(Player player1, Player player2, ref bool envidoCalled, ref int envidoWanted, bool trucoCalled,
-            ref int player1EnvidoPoints, ref int player2EnvidoPoints, Player currentPlayer, Player oponent, ref bool checkIsNeeded)
+            ref int player1EnvidoPoints, ref int player2EnvidoPoints, Player currentPlayer, Player oponent, ref bool checkIsNeeded, Player isHand)
         {
             if (trucoCalled == false) // IF TRUCO HASN'T BEEN CALLED YET...
             {
@@ -573,12 +622,12 @@ namespace Library
                         if (currentPlayer == player1)
                         {
                             player1EnvidoPoints = CalculateEnvidoPoints(HandPlayerOne);
-                            ResolveEnvido(player1, player2, player1EnvidoPoints, player1EnvidoPoints);
+                            ResolveEnvido(player1, player2, player1EnvidoPoints, player1EnvidoPoints, isHand);
                         }
                         else
                         {
                             player2EnvidoPoints = CalculateEnvidoPoints(HandPlayerTwo);
-                            ResolveEnvido(player1, player2, player1EnvidoPoints, player2EnvidoPoints);
+                            ResolveEnvido(player1, player2, player1EnvidoPoints, player2EnvidoPoints, isHand);
                         }                        
                     }
                     else
@@ -593,14 +642,14 @@ namespace Library
                             this.PlayerOneScore++;
                         }                        
                     }
-                    checkIsNeeded = true;
+                    checkIsNeeded = false;
                 }
             }
         }
 
         // --------------------------
 
-        private void ResolveEnvido(Player player1, Player player2, int player1EnvidoPoints, int player2EnvidoPoints)
+        private void ResolveEnvido(Player player1, Player player2, int player1EnvidoPoints, int player2EnvidoPoints, Player isHand)
         {
             Announce(@" \b " + player1.Name + @"\b0:  " + player1EnvidoPoints.ToString() + @"  \line\line");
             NotifyLogUpdate?.Invoke(this, EventArgs.Empty);
@@ -623,6 +672,31 @@ namespace Library
                 Announce(@"* * * * *  \line");
                 NotifyLogUpdate?.Invoke(this, EventArgs.Empty);
                 Thread.Sleep(2000);
+            }
+            else
+            {
+                if( player1 == isHand)
+                {
+                    this.PlayerOneScore++;
+                    Announce(@" \b " + player1.Name + @" wins since they're Hand.\b0\line\line");
+                    NotifyLogUpdate?.Invoke(this, EventArgs.Empty);
+                    Thread.Sleep(1000);
+                    Announce(@" \b +1pt for " + player1.Name + @"\b0\line\line");
+                    Announce(@"* * * * *  \line");
+                    NotifyLogUpdate?.Invoke(this, EventArgs.Empty);
+                    Thread.Sleep(2000);
+                }
+                else
+                {
+                    this.PlayerTwoScore++;
+                    Announce(@" \b " + player2.Name + @" wins since they're Hand.\b0\line\line");
+                    NotifyLogUpdate?.Invoke(this, EventArgs.Empty);
+                    Thread.Sleep(1000);
+                    Announce(@" \b +1pt for " + player2.Name + @"\b0\line\line");
+                    Announce(@"* * * * *  \line");
+                    NotifyLogUpdate?.Invoke(this, EventArgs.Empty);
+                    Thread.Sleep(2000);
+                }
             }
         }
 
