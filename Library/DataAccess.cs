@@ -70,27 +70,82 @@ namespace Library
 
         // --------------------------
 
-        public void WritePlayers(Player player)
+        public void InsertPlayer(Player player)
         {
             string connectionString = "Server=ARIS-PC\\SERVIDORPARCIAL;Database=Parcial;Trusted_Connection=True;TrustServerCertificate=True";
             SqlConnection connection = new SqlConnection(connectionString);
             try
             {
+                //***[ INSERT NEW PLAYER ]
+
                 connection.Open();
 
                 SqlCommand sqlCommand = new SqlCommand();
 
                 sqlCommand.CommandType = System.Data.CommandType.Text;
                 sqlCommand.Connection = connection;
-                sqlCommand.CommandText = "INSERT INTO Players VALUES (@name, @gamesPlayed, @gamesWon, @gamesLost, @gamesTied)";
+                sqlCommand.CommandText = "INSERT INTO Players VALUES (@name)";
 
                 sqlCommand.Parameters.AddWithValue("@name", player.Name);
-                sqlCommand.Parameters.AddWithValue("@gamesPlayed", player.GamesPlayed);
-                sqlCommand.Parameters.AddWithValue("@gamesWon", player.GamesWon);
-                sqlCommand.Parameters.AddWithValue("@gamesLost", player.GamesLost);
-                sqlCommand.Parameters.AddWithValue("@gamesTied", player.GamesTied);
+                sqlCommand.ExecuteNonQuery();
+
+                if (connection.State == System.Data.ConnectionState.Open)
+                {
+                    connection.Close();
+                }
+
+                // - - - - -
+
+                //***[ CLEAR PARAMS ]
+
+                sqlCommand.Parameters.Clear();
+
+                // - - - - -
+
+                //***[ GET NEW INSERTED ID ]
+
+                connection.Open();
+
+                int id = 0;
+                sqlCommand.CommandText = "SELECT TOP 1 * FROM Players ORDER BY ID DESC";
+
+                SqlDataReader reader = sqlCommand.ExecuteReader();
+
+
+                while (reader.Read())
+                {
+                    id = reader.GetInt32(0);
+                }
+
+                // * * * * * !!!
+                player.Id = id; // HERE I GET THE ID THE TABLE GAVE TO MY NEW PLAYER
+                // * * * * * !!!
+
+                if (connection.State == System.Data.ConnectionState.Open)
+                {
+                    connection.Close();
+                }
+
+                //***[ CLEAR PARAMS ]
+
+                sqlCommand.Parameters.Clear();
+
+                // - - - - -
+
+                //***[ GET NEW INSERTED ID ]
+
+                connection.Open();
+
+                sqlCommand.CommandText = "INSERT INTO Score VALUES (@id, @gamesPlayed, @gamesWon, @gamesLost, @gamesTied)";
+
+                sqlCommand.Parameters.AddWithValue("@id", id);
+                sqlCommand.Parameters.AddWithValue("@gamesPlayed", 0);
+                sqlCommand.Parameters.AddWithValue("@gamesWon", 0);
+                sqlCommand.Parameters.AddWithValue("@gamesLost", 0);
+                sqlCommand.Parameters.AddWithValue("@gamesTied", 0);
 
                 sqlCommand.ExecuteNonQuery();
+
 
                 if (connection.State == System.Data.ConnectionState.Open)
                 {
@@ -156,5 +211,33 @@ namespace Library
 
         // --------------------------
 
+        public void DeletePlayer(Player player)
+        {
+            string connectionString = "Server=ARIS-PC\\SERVIDORPARCIAL;Database=Parcial;Trusted_Connection=True;TrustServerCertificate=True";
+            SqlConnection connection = new SqlConnection(connectionString);
+            try
+            {
+                connection.Open();
+
+                SqlCommand sqlCommand = new SqlCommand();
+
+                sqlCommand.CommandType = System.Data.CommandType.Text;
+                sqlCommand.Connection = connection;
+                sqlCommand.CommandText = "DELETE FROM Players WHERE ID = @id";
+                sqlCommand.Parameters.AddWithValue("@id", player.Id);
+
+                sqlCommand.ExecuteNonQuery();
+
+                if (connection.State == System.Data.ConnectionState.Open)
+                {
+                    connection.Close();
+                }
+
+            }
+            catch
+            {
+
+            }
+        }
     }
 }

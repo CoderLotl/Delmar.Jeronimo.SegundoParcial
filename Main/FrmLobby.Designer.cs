@@ -37,6 +37,8 @@
             this.Btn_CreateRoom = new System.Windows.Forms.Button();
             this.listBox1 = new System.Windows.Forms.ListBox();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
+            this.btn_NewPlayer = new System.Windows.Forms.Button();
+            this.btn_DeletePlayer = new System.Windows.Forms.Button();
             this.groupBox1.SuspendLayout();
             this.groupBox3.SuspendLayout();
             this.groupBox2.SuspendLayout();
@@ -127,18 +129,40 @@
             // groupBox2
             // 
             this.groupBox2.Controls.Add(this.listBox1);
-            this.groupBox2.Location = new System.Drawing.Point(884, 28);
+            this.groupBox2.Location = new System.Drawing.Point(1043, 28);
             this.groupBox2.Name = "groupBox2";
             this.groupBox2.Size = new System.Drawing.Size(180, 321);
             this.groupBox2.TabIndex = 4;
             this.groupBox2.TabStop = false;
             this.groupBox2.Text = "Players currently online:";
             // 
+            // btn_NewPlayer
+            // 
+            this.btn_NewPlayer.Location = new System.Drawing.Point(1085, 355);
+            this.btn_NewPlayer.Name = "btn_NewPlayer";
+            this.btn_NewPlayer.Size = new System.Drawing.Size(100, 55);
+            this.btn_NewPlayer.TabIndex = 5;
+            this.btn_NewPlayer.Text = "Create New Player";
+            this.btn_NewPlayer.UseVisualStyleBackColor = true;
+            this.btn_NewPlayer.Click += new System.EventHandler(this.btn_NewPlayer_Click);
+            // 
+            // btn_DeletePlayer
+            // 
+            this.btn_DeletePlayer.Location = new System.Drawing.Point(1085, 434);
+            this.btn_DeletePlayer.Name = "btn_DeletePlayer";
+            this.btn_DeletePlayer.Size = new System.Drawing.Size(100, 55);
+            this.btn_DeletePlayer.TabIndex = 6;
+            this.btn_DeletePlayer.Text = "Delete Player";
+            this.btn_DeletePlayer.UseVisualStyleBackColor = true;
+            this.btn_DeletePlayer.Click += new System.EventHandler(this.btn_DeletePlayer_Click);
+            // 
             // FrmLobby
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1071, 492);
+            this.ClientSize = new System.Drawing.Size(1235, 602);
+            this.Controls.Add(this.btn_DeletePlayer);
+            this.Controls.Add(this.btn_NewPlayer);
             this.Controls.Add(this.groupBox2);
             this.Controls.Add(this.groupBox1);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
@@ -165,5 +189,7 @@
         private System.Windows.Forms.Button Btn_CreateRoom;
         private System.Windows.Forms.GroupBox groupBox3;
         private System.Windows.Forms.Label label2;
+        private System.Windows.Forms.Button btn_NewPlayer;
+        private System.Windows.Forms.Button btn_DeletePlayer;
     }
 }

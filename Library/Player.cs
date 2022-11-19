@@ -39,7 +39,7 @@ namespace Library
 
         public override string ToString()
         {
-            return "Name: "+this.Name+"\nGames played: "+this.GamesPlayed+"\nGames won: "+this.gamesWon+"\nGames lost: "+this.gamesLost+"\nGames tied: "+this.gamesTied;
+            return "Name: "+this.Name+"\n\nGames played: "+this.GamesPlayed+"\nGames won: "+this.gamesWon+"\nGames lost: "+this.gamesLost+"\nGames tied: "+this.gamesTied;
         }
     }
 }

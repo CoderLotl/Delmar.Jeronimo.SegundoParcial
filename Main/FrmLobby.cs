@@ -47,7 +47,7 @@ namespace Main
                         return;
                     }
 
-                    GameMechanics.rooms[i].NewGame.NotifyEndGame += EndGameHandler;
+                    GameMechanics.Rooms[i].NewGame.NotifyEndGame += EndGameHandler;
                     if (InvokeRequired)
                     {
                         Invoke((MethodInvoker)(() => DrawTree()));
@@ -137,9 +137,9 @@ namespace Main
             treeView1.Nodes.Clear();
 
             treeView1.Nodes.Add("Rooms");
-            if (GameMechanics.rooms != null)
+            if (GameMechanics.Rooms != null)
             {
-                foreach (Room room in GameMechanics.rooms)
+                foreach (Room room in GameMechanics.Rooms)
                 {
                     TreeNode newRoomNode = new TreeNode();
                     newRoomNode.Text = room.Name;
@@ -166,7 +166,7 @@ namespace Main
                 }
                 treeView1.Nodes[0].ExpandAll();
 
-                label1.Text = "Open rooms: " + GameMechanics.rooms.Count;
+                label1.Text = "Open rooms: " + GameMechanics.Rooms.Count;
             }
         }
 
@@ -224,7 +224,7 @@ namespace Main
 
         private void CreateForms()
         {
-            foreach (Room room in GameMechanics.rooms)
+            foreach (Room room in GameMechanics.Rooms)
             {
                 FrmRoom newViewForm = new FrmRoom(room, DrawTree, this.FormClose);
                 newViewForm.Name = room.Name;
@@ -269,7 +269,7 @@ namespace Main
 
         private void FormClose(FrmRoom form)
         {
-            GameMechanics.rooms.Remove(form.Room);
+            GameMechanics.Rooms.Remove(form.Room);
             viewForms.Remove(form);
             if (InvokeRequired)
             {
@@ -292,7 +292,7 @@ namespace Main
             FrmAddRoom frmAddRoom = new();
             if (frmAddRoom.ShowDialog() == DialogResult.OK)
             {
-                GameMechanics.rooms.Add(frmAddRoom.NewRoom);
+                GameMechanics.Rooms.Add(frmAddRoom.NewRoom);
                 frmAddRoom.NewRoom.NewGame.NotifyEndGame += EndGameHandler;
 
                 //-----
@@ -311,6 +311,49 @@ namespace Main
             frmRoom.Subscribe();
 
             viewForms.Add(frmRoom);
+        }
+
+        private void btn_NewPlayer_Click(object sender, EventArgs e)
+        {
+            string newPlayerName;
+            Player newPlayer;
+            DataAccess dataAccess = new DataAccess();
+
+            FrmNewPlayer frmNewPlayer = new FrmNewPlayer();
+
+            if(frmNewPlayer.ShowDialog() == DialogResult.OK)
+            {
+                newPlayerName = frmNewPlayer.NewPlayer;
+
+                newPlayer = new();
+                newPlayer.Name = newPlayerName;
+                newPlayer.GamesPlayed = 0;
+                newPlayer.GamesLost = 0;
+                newPlayer.GamesWon = 0;
+                newPlayer.GamesTied = 0;
+
+                GameMechanics.Players.Add(newPlayer);
+                DrawPlayersList();
+
+                dataAccess.InsertPlayer(newPlayer);
+            }
+        }
+
+        private void btn_DeletePlayer_Click(object sender, EventArgs e)
+        {
+            Player newPlayer;
+            DataAccess dataAccess = new DataAccess();
+
+            FrmDeletePlayer frmDeletePlayer = new FrmDeletePlayer();
+
+            if(frmDeletePlayer.ShowDialog() == DialogResult.OK)
+            {
+                newPlayer = frmDeletePlayer.PlayerToDelete;
+                dataAccess.DeletePlayer(newPlayer);
+                GameMechanics.Players.Remove(newPlayer);
+
+                DrawPlayersList();
+            }
         }
     }
 }

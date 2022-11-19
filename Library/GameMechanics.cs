@@ -7,13 +7,21 @@ namespace Library
     {
 
         private static List<Player> players;
-        public static List<Room> rooms;
+        private static List<Room> rooms;
+        private static int id;
 
         public static List<Player> Players { get => players; set => players = value; }
+        public static List<Room> Rooms { get => rooms; set => rooms = value; }
+        public static int ID { get => id; set => id = value; }
 
         public delegate void Notify();
 
         public static event Notify NotifyUpdate;
+
+        static GameMechanics()
+        {
+            ID = 0;
+        }
 
         public static void InitializeLists(Action<string> warning)
         {
@@ -40,11 +48,13 @@ namespace Library
 
             //player2 = players[1];
 
-            string roomName = "Room #" + (rooms.Count + 1).ToString();
+            string roomName = "Room #" + (GameMechanics.ID + 1).ToString();
 
             Room newRoom = new Room(roomName, player1, player2, GameType.Cards, GameSubType.Truco);
 
             rooms.Add(newRoom);
+
+            GameMechanics.ID++;
 
         }
 

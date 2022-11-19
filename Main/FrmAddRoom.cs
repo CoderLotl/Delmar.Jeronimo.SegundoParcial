@@ -84,7 +84,8 @@ namespace Main
             gameType = GameType.Cards;
             gameSubType = GameSubType.Truco;
 
-            roomName = "Room #" + (GameMechanics.rooms.Count + 1).ToString();
+            roomName = "Room #" + (GameMechanics.ID + 1).ToString();
+            GameMechanics.ID++;
 
             newRoom = new Room(roomName, player1, player2, gameType, gameSubType);
 
