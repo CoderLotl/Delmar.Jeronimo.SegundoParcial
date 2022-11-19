@@ -61,14 +61,20 @@ namespace Main
                 richTextBox1.Invoke(new MethodInvoker(delegate { richTextBox1.Rtf = room.NewGame.Log; }));
                 richTextBox1.Invoke(new MethodInvoker(delegate { richTextBox1.SelectionStart = richTextBox1.Text.Length; }));
                 richTextBox1.Invoke(new MethodInvoker(delegate { richTextBox1.ScrollToCaret();}));
-                lbl_P1Score.Invoke(new MethodInvoker(delegate { lbl_P1Score.Text = room.NewGame.PlayerOneScore.ToString(); }));
-                lbl_P2Score.Invoke(new MethodInvoker(delegate { lbl_P2Score.Text = room.NewGame.PlayerTwoScore.ToString(); }));
             }
             else
             {
                 richTextBox1.Rtf = room.NewGame.Log;
                 richTextBox1.SelectionStart = richTextBox1.Text.Length;
                 richTextBox1.ScrollToCaret();
+            }
+            if (lbl_P1Score.InvokeRequired)
+            {
+                lbl_P1Score.Invoke(new MethodInvoker(delegate { lbl_P1Score.Text = room.NewGame.PlayerOneScore.ToString(); }));
+                lbl_P2Score.Invoke(new MethodInvoker(delegate { lbl_P2Score.Text = room.NewGame.PlayerTwoScore.ToString(); }));
+            }
+            else
+            {
                 lbl_P1Score.Text = room.NewGame.PlayerOneScore.ToString();
                 lbl_P2Score.Text = room.NewGame.PlayerTwoScore.ToString();
             }

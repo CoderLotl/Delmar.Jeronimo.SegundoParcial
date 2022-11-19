@@ -242,7 +242,7 @@ namespace Library
 
             // --- START
 
-            while(this.Turn < 5 && this.CancelToken.IsCancellationRequested != true)
+            while(this.Turn < 4 && this.CancelToken.IsCancellationRequested != true)
             {
                 ChoosePlayerOne(player1, player2, out playerOne, out playerTwo);
                 this.Turn++; //+1 TO THE TURNS
@@ -250,13 +250,13 @@ namespace Library
                 Thread.Sleep(2000);                
             }
 
-            Announce(@" \b\i Game Finished. - - - Please wait...\i0\b0\line");
+            Announce(@" \b\i Game Finished. - - - Please wait...\i0\b0\line\line");
             NotifyLogUpdate?.Invoke(this, EventArgs.Empty);
             Thread.Sleep(2000);
 
             DecideWinner(player1, player2);
 
-            Announce(@" \b\i Updating players statics...\i0\b0\line");
+            Announce(@" \b\i Updating players statics...\i0\b0\line\line");
             NotifyLogUpdate?.Invoke(this, EventArgs.Empty);
             UpdatePlayersStats(player1, player2);
                         
@@ -273,7 +273,7 @@ namespace Library
             {                
                 player1.GamesWon++;
                 player2.GamesLost++;
-                Announce(@" \b  \b0\line");
+                Announce(@" \b " + player1.Name + @" is the Winner!\b0\line");
                 NotifyLogUpdate?.Invoke(this, EventArgs.Empty);
                 Thread.Sleep(2000);
             }
@@ -281,11 +281,17 @@ namespace Library
             {
                 player2.GamesWon++;
                 player1.GamesLost++;
+                Announce(@" \b " + player2.Name + @" is the Winner!\b0\line");
+                NotifyLogUpdate?.Invoke(this, EventArgs.Empty);
+                Thread.Sleep(2000);
             }
             else
             {
                 player1.GamesTied++;
                 player2.GamesTied++;
+                Announce(@" \b Both players ended in ties.\b0\line");
+                NotifyLogUpdate?.Invoke(this, EventArgs.Empty);
+                Thread.Sleep(2000);
             }
         }
 
