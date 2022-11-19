@@ -249,12 +249,54 @@ namespace Library
                 PlayRound(playerOne, playerTwo);
                 Thread.Sleep(2000);                
             }
-            Announce(@" \b\i Game Finished. \i0\b0\line");
-            
+
+            Announce(@" \b\i Game Finished. - - - Please wait...\i0\b0\line");
             NotifyLogUpdate?.Invoke(this, EventArgs.Empty);
-            
+            Thread.Sleep(2000);
+
+            DecideWinner(player1, player2);
+
+            Announce(@" \b\i Updating players statics...\i0\b0\line");
+            NotifyLogUpdate?.Invoke(this, EventArgs.Empty);
+            UpdatePlayersStats(player1, player2);
+                        
             NotifyEndGame?.Invoke(this, EventArgs.Empty);
 
+        }
+
+        private void DecideWinner(Player player1, Player player2)
+        {
+            player1.GamesPlayed++;
+            player2.GamesPlayed++;
+
+            if(PlayerOneScore > PlayerTwoScore)
+            {                
+                player1.GamesWon++;
+                player2.GamesLost++;
+                Announce(@" \b  \b0\line");
+                NotifyLogUpdate?.Invoke(this, EventArgs.Empty);
+                Thread.Sleep(2000);
+            }
+            else if (PlayerOneScore < PlayerTwoScore)
+            {
+                player2.GamesWon++;
+                player1.GamesLost++;
+            }
+            else
+            {
+                player1.GamesTied++;
+                player2.GamesTied++;
+            }
+        }
+
+        // --------------------------
+
+        private void UpdatePlayersStats(Player player1, Player player2)
+        {
+            DataAccess dataAccess = new DataAccess();
+
+            dataAccess.UpdatePlayer(player1);
+            dataAccess.UpdatePlayer(player2);
         }
 
         // --------------------------

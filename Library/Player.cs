@@ -13,14 +13,16 @@ namespace Library
         int gamesPlayed;
         int gamesWon;
         int gamesLost;
+        int gamesTied;
 
-        public Player(int id, string name, int gamesPlayed, int gamesWon, int gamesLost)
+        public Player(int id, string name, int gamesPlayed, int gamesWon, int gamesLost, int gamesTied)
         {
             this.id = id;
             this.name = name;
             this.gamesPlayed = gamesPlayed;
             this.gamesWon = gamesWon;
             this.gamesLost = gamesLost;
+            this.gamesTied = gamesTied;
         }
 
         public Player()
@@ -32,11 +34,12 @@ namespace Library
         public string Name { get => name; set => name = value; }
         public int GamesPlayed { get => gamesPlayed; set => gamesPlayed = value; }
         public int GamesWon { get => gamesWon; set => gamesWon = value; }
-        public int GamesLost { get => gamesLost; set => gamesLost = value; }        
+        public int GamesLost { get => gamesLost; set => gamesLost = value; }
+        public int GamesTied { get => gamesTied; set => gamesTied = value; }
 
         public override string ToString()
         {
-            return "Name: "+this.Name+"\nGames played: "+this.GamesPlayed+"\nGames won: "+this.gamesWon+"\nGames lost: "+this.gamesLost;
+            return "Name: "+this.Name+"\nGames played: "+this.GamesPlayed+"\nGames won: "+this.gamesWon+"\nGames lost: "+this.gamesLost+"\nGames tied: "+this.gamesTied;
         }
     }
 }

@@ -23,7 +23,7 @@ namespace Library
                 SqlCommand sqlCommand = new SqlCommand();
 
                 sqlCommand.CommandType = System.Data.CommandType.Text;
-                sqlCommand.CommandText = "select Players.ID, Players.Name, Score.GamesPlayed, Score.GamesWon, Score.GamesLost" +
+                sqlCommand.CommandText = "select Players.ID, Players.Name, Score.GamesPlayed, Score.GamesWon, Score.GamesLost, Score.GamesTied" +
                     " from Players inner join Score on Players.ID = Score.ID ";
                 sqlCommand.Connection = connection;
 
@@ -36,8 +36,9 @@ namespace Library
                     int gamesPlayed = reader.GetInt32(2);
                     int gamesWon = reader.GetInt32(3);
                     int gamesLost = reader.GetInt32(4);
+                    int gamesTied = reader.GetInt32(5);
 
-                    Player newPlayer = new Player(id, name, gamesPlayed, gamesWon, gamesLost);
+                    Player newPlayer = new Player(id, name, gamesPlayed, gamesWon, gamesLost, gamesTied);
                     playerList.Add(newPlayer);
                 }
 
@@ -53,7 +54,7 @@ namespace Library
 
                 for (int i = 0; i < 6; i++)
                 {
-                    Player newPlayer = new Player(i + 1, names[i], 0, 0, 0);
+                    Player newPlayer = new Player(i + 1, names[i], 0, 0, 0, 0);
                     playerList.Add(newPlayer);
                 }
                 GameMechanics.Players = playerList;
@@ -81,12 +82,13 @@ namespace Library
 
                 sqlCommand.CommandType = System.Data.CommandType.Text;
                 sqlCommand.Connection = connection;
-                sqlCommand.CommandText = "INSERT INTO Players VALUES (@name, @gamesPlayed, @gamesWon, @gamesLost)";
+                sqlCommand.CommandText = "INSERT INTO Players VALUES (@name, @gamesPlayed, @gamesWon, @gamesLost, @gamesTied)";
 
                 sqlCommand.Parameters.AddWithValue("@name", player.Name);
                 sqlCommand.Parameters.AddWithValue("@gamesPlayed", player.GamesPlayed);
                 sqlCommand.Parameters.AddWithValue("@gamesWon", player.GamesWon);
                 sqlCommand.Parameters.AddWithValue("@gamesLost", player.GamesLost);
+                sqlCommand.Parameters.AddWithValue("@gamesTied", player.GamesTied);
 
                 sqlCommand.ExecuteNonQuery();
 
@@ -123,11 +125,12 @@ namespace Library
 
                 sqlCommand.CommandType = System.Data.CommandType.Text;
                 sqlCommand.Connection = connection;
-                sqlCommand.CommandText = "UPDATE Score SET gamesPlayed = @gamesPlayed, gamesWon = @gamesWon, gamesLost = @gamesLost WHERE ID = @id";
+                sqlCommand.CommandText = "UPDATE Score SET gamesPlayed = @gamesPlayed, gamesWon = @gamesWon, gamesLost = @gamesLost, gamesTied = @gamesTied WHERE ID = @id";
 
                 sqlCommand.Parameters.AddWithValue("@gamesPlayed", player.GamesPlayed);
                 sqlCommand.Parameters.AddWithValue("@gamesWon", player.GamesWon);
                 sqlCommand.Parameters.AddWithValue("@gamesLost", player.GamesLost);
+                sqlCommand.Parameters.AddWithValue("@gamesTied", player.GamesTied);
                 sqlCommand.Parameters.AddWithValue("@id", player.Id);
 
                 sqlCommand.ExecuteNonQuery();

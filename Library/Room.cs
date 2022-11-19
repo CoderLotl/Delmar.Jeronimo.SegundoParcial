@@ -14,7 +14,6 @@ namespace Library
         List<Player> players;             
         Game newGame;
         Task newTask;
-        DataAccess newSQLConnection;
 
         public Room(string name, Player player1, Player player2, GameType gameType, GameSubType gameSubType)
         {
@@ -24,8 +23,6 @@ namespace Library
             this.players.Add(player1); this.players.Add(player2);
 
             this.gameConcluded = false;
-
-            this.newSQLConnection = new DataAccess(); // FOR SAVING LATER
 
             // --- SETTING THE GAME BY THE TYPE AND SUBTYPE
             this.newGame = InitializeGame(gameType, gameSubType);
