@@ -39,6 +39,7 @@
             this.groupBox2 = new System.Windows.Forms.GroupBox();
             this.btn_NewPlayer = new System.Windows.Forms.Button();
             this.btn_DeletePlayer = new System.Windows.Forms.Button();
+            this.btn_Statistics = new System.Windows.Forms.Button();
             this.groupBox1.SuspendLayout();
             this.groupBox3.SuspendLayout();
             this.groupBox2.SuspendLayout();
@@ -46,9 +47,10 @@
             // 
             // treeView1
             // 
-            this.treeView1.Location = new System.Drawing.Point(6, 68);
+            this.treeView1.Font = new System.Drawing.Font("Century Gothic", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+            this.treeView1.Location = new System.Drawing.Point(6, 123);
             this.treeView1.Name = "treeView1";
-            this.treeView1.Size = new System.Drawing.Size(522, 343);
+            this.treeView1.Size = new System.Drawing.Size(488, 290);
             this.treeView1.TabIndex = 0;
             this.treeView1.BeforeCollapse += new System.Windows.Forms.TreeViewCancelEventHandler(this.TreeView_BeforeCollapse);
             this.treeView1.NodeMouseClick += new System.Windows.Forms.TreeNodeMouseClickEventHandler(this.TreeView_NodeMouseClick);
@@ -57,22 +59,26 @@
             // label1
             // 
             this.label1.AutoSize = true;
+            this.label1.Font = new System.Drawing.Font("Century Gothic", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
             this.label1.Location = new System.Drawing.Point(6, 32);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(38, 15);
+            this.label1.Size = new System.Drawing.Size(47, 17);
             this.label1.TabIndex = 1;
             this.label1.Text = "label1";
             // 
             // groupBox1
             // 
+            this.groupBox1.BackColor = System.Drawing.Color.DarkSlateGray;
+            this.groupBox1.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
             this.groupBox1.Controls.Add(this.groupBox3);
             this.groupBox1.Controls.Add(this.Btn_EndGame);
             this.groupBox1.Controls.Add(this.Btn_CreateRoom);
             this.groupBox1.Controls.Add(this.treeView1);
             this.groupBox1.Controls.Add(this.label1);
-            this.groupBox1.Location = new System.Drawing.Point(12, 28);
+            this.groupBox1.Font = new System.Drawing.Font("Century Gothic", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
+            this.groupBox1.Location = new System.Drawing.Point(12, 12);
             this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(665, 430);
+            this.groupBox1.Size = new System.Drawing.Size(500, 527);
             this.groupBox1.TabIndex = 2;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Active Game Rooms";
@@ -80,7 +86,7 @@
             // groupBox3
             // 
             this.groupBox3.Controls.Add(this.label2);
-            this.groupBox3.Location = new System.Drawing.Point(162, 13);
+            this.groupBox3.Location = new System.Drawing.Point(6, 75);
             this.groupBox3.Name = "groupBox3";
             this.groupBox3.Size = new System.Drawing.Size(488, 40);
             this.groupBox3.TabIndex = 4;
@@ -90,14 +96,16 @@
             // label2
             // 
             this.label2.AutoSize = true;
+            this.label2.Font = new System.Drawing.Font("Century Gothic", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
             this.label2.Location = new System.Drawing.Point(17, 19);
             this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(0, 15);
+            this.label2.Size = new System.Drawing.Size(0, 17);
             this.label2.TabIndex = 0;
             // 
             // Btn_EndGame
             // 
-            this.Btn_EndGame.Location = new System.Drawing.Point(575, 224);
+            this.Btn_EndGame.Font = new System.Drawing.Font("Century Gothic", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+            this.Btn_EndGame.Location = new System.Drawing.Point(419, 419);
             this.Btn_EndGame.Name = "Btn_EndGame";
             this.Btn_EndGame.Size = new System.Drawing.Size(75, 102);
             this.Btn_EndGame.TabIndex = 3;
@@ -108,7 +116,8 @@
             // Btn_CreateRoom
             // 
             this.Btn_CreateRoom.Enabled = false;
-            this.Btn_CreateRoom.Location = new System.Drawing.Point(575, 116);
+            this.Btn_CreateRoom.Font = new System.Drawing.Font("Century Gothic", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+            this.Btn_CreateRoom.Location = new System.Drawing.Point(6, 423);
             this.Btn_CreateRoom.Name = "Btn_CreateRoom";
             this.Btn_CreateRoom.Size = new System.Drawing.Size(75, 102);
             this.Btn_CreateRoom.TabIndex = 2;
@@ -118,8 +127,11 @@
             // 
             // listBox1
             // 
+            this.listBox1.BackColor = System.Drawing.Color.IndianRed;
+            this.listBox1.Font = new System.Drawing.Font("Century Gothic", 12F, System.Drawing.FontStyle.Italic, System.Drawing.GraphicsUnit.Point);
+            this.listBox1.ForeColor = System.Drawing.Color.YellowGreen;
             this.listBox1.FormattingEnabled = true;
-            this.listBox1.ItemHeight = 15;
+            this.listBox1.ItemHeight = 19;
             this.listBox1.Location = new System.Drawing.Point(6, 22);
             this.listBox1.Name = "listBox1";
             this.listBox1.Size = new System.Drawing.Size(168, 289);
@@ -128,8 +140,10 @@
             // 
             // groupBox2
             // 
+            this.groupBox2.BackColor = System.Drawing.Color.Firebrick;
             this.groupBox2.Controls.Add(this.listBox1);
-            this.groupBox2.Location = new System.Drawing.Point(1043, 28);
+            this.groupBox2.Font = new System.Drawing.Font("Century Gothic", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+            this.groupBox2.Location = new System.Drawing.Point(1043, 12);
             this.groupBox2.Name = "groupBox2";
             this.groupBox2.Size = new System.Drawing.Size(180, 321);
             this.groupBox2.TabIndex = 4;
@@ -138,6 +152,7 @@
             // 
             // btn_NewPlayer
             // 
+            this.btn_NewPlayer.Font = new System.Drawing.Font("Century Gothic", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
             this.btn_NewPlayer.Location = new System.Drawing.Point(1085, 355);
             this.btn_NewPlayer.Name = "btn_NewPlayer";
             this.btn_NewPlayer.Size = new System.Drawing.Size(100, 55);
@@ -148,7 +163,8 @@
             // 
             // btn_DeletePlayer
             // 
-            this.btn_DeletePlayer.Location = new System.Drawing.Point(1085, 434);
+            this.btn_DeletePlayer.Font = new System.Drawing.Font("Century Gothic", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+            this.btn_DeletePlayer.Location = new System.Drawing.Point(1085, 435);
             this.btn_DeletePlayer.Name = "btn_DeletePlayer";
             this.btn_DeletePlayer.Size = new System.Drawing.Size(100, 55);
             this.btn_DeletePlayer.TabIndex = 6;
@@ -156,18 +172,33 @@
             this.btn_DeletePlayer.UseVisualStyleBackColor = true;
             this.btn_DeletePlayer.Click += new System.EventHandler(this.btn_DeletePlayer_Click);
             // 
+            // btn_Statistics
+            // 
+            this.btn_Statistics.Font = new System.Drawing.Font("Century Gothic", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+            this.btn_Statistics.Location = new System.Drawing.Point(1085, 515);
+            this.btn_Statistics.Name = "btn_Statistics";
+            this.btn_Statistics.Size = new System.Drawing.Size(100, 55);
+            this.btn_Statistics.TabIndex = 7;
+            this.btn_Statistics.Text = "Statistics";
+            this.btn_Statistics.UseVisualStyleBackColor = true;
+            this.btn_Statistics.Click += new System.EventHandler(this.btn_Statistics_Click);
+            // 
             // FrmLobby
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1235, 602);
+            this.BackColor = System.Drawing.Color.Black;
+            this.BackgroundImage = global::Main.Properties.Resources.cabecera_truc;
+            this.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
+            this.ClientSize = new System.Drawing.Size(1235, 654);
+            this.Controls.Add(this.btn_Statistics);
             this.Controls.Add(this.btn_DeletePlayer);
             this.Controls.Add(this.btn_NewPlayer);
             this.Controls.Add(this.groupBox2);
             this.Controls.Add(this.groupBox1);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
             this.Name = "FrmLobby";
-            this.Text = "Form1";
+            this.Text = "Lobby";
             this.Load += new System.EventHandler(this.FrmLobby_Load);
             this.groupBox1.ResumeLayout(false);
             this.groupBox1.PerformLayout();
@@ -191,5 +222,6 @@
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.Button btn_NewPlayer;
         private System.Windows.Forms.Button btn_DeletePlayer;
+        private System.Windows.Forms.Button btn_Statistics;
     }
 }

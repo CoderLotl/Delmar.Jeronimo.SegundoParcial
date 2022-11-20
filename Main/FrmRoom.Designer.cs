@@ -55,16 +55,17 @@
             // listBox1
             // 
             this.listBox1.FormattingEnabled = true;
-            this.listBox1.ItemHeight = 15;
+            this.listBox1.ItemHeight = 21;
             this.listBox1.Location = new System.Drawing.Point(6, 22);
             this.listBox1.Name = "listBox1";
-            this.listBox1.Size = new System.Drawing.Size(115, 154);
+            this.listBox1.Size = new System.Drawing.Size(115, 151);
             this.listBox1.TabIndex = 2;
             this.listBox1.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.ListBox_MouseDoubleClick);
             // 
             // groupBox2
             // 
             this.groupBox2.Controls.Add(this.listBox1);
+            this.groupBox2.Font = new System.Drawing.Font("Century Gothic", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
             this.groupBox2.Location = new System.Drawing.Point(809, 12);
             this.groupBox2.Name = "groupBox2";
             this.groupBox2.Size = new System.Drawing.Size(133, 233);
@@ -74,6 +75,7 @@
             // 
             // button1
             // 
+            this.button1.Font = new System.Drawing.Font("Century Gothic", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
             this.button1.Location = new System.Drawing.Point(809, 260);
             this.button1.Name = "button1";
             this.button1.Size = new System.Drawing.Size(133, 46);
@@ -85,9 +87,11 @@
             // lbl_Timer
             // 
             this.lbl_Timer.AutoSize = true;
-            this.lbl_Timer.Location = new System.Drawing.Point(22, 9);
+            this.lbl_Timer.Font = new System.Drawing.Font("Century Gothic", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+            this.lbl_Timer.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(64)))), ((int)(((byte)(0)))));
+            this.lbl_Timer.Location = new System.Drawing.Point(467, 494);
             this.lbl_Timer.Name = "lbl_Timer";
-            this.lbl_Timer.Size = new System.Drawing.Size(38, 15);
+            this.lbl_Timer.Size = new System.Drawing.Size(56, 22);
             this.lbl_Timer.TabIndex = 5;
             this.lbl_Timer.Text = "Timer";
             this.lbl_Timer.Visible = false;
@@ -98,6 +102,7 @@
             this.groupBox3.Controls.Add(this.lbl_P2Name);
             this.groupBox3.Controls.Add(this.lbl_P1Score);
             this.groupBox3.Controls.Add(this.lbl_P1Name);
+            this.groupBox3.Font = new System.Drawing.Font("Century Gothic", 18F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
             this.groupBox3.Location = new System.Drawing.Point(22, 398);
             this.groupBox3.Name = "groupBox3";
             this.groupBox3.Size = new System.Drawing.Size(439, 118);
@@ -110,16 +115,17 @@
             this.lbl_P2Score.AutoSize = true;
             this.lbl_P2Score.Location = new System.Drawing.Point(208, 53);
             this.lbl_P2Score.Name = "lbl_P2Score";
-            this.lbl_P2Score.Size = new System.Drawing.Size(12, 15);
+            this.lbl_P2Score.Size = new System.Drawing.Size(21, 30);
             this.lbl_P2Score.TabIndex = 3;
             this.lbl_P2Score.Text = "-";
             // 
             // lbl_P2Name
             // 
             this.lbl_P2Name.AutoSize = true;
+            this.lbl_P2Name.Font = new System.Drawing.Font("Century Gothic", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
             this.lbl_P2Name.Location = new System.Drawing.Point(208, 26);
             this.lbl_P2Name.Name = "lbl_P2Name";
-            this.lbl_P2Name.Size = new System.Drawing.Size(54, 15);
+            this.lbl_P2Name.Size = new System.Drawing.Size(77, 21);
             this.lbl_P2Name.TabIndex = 2;
             this.lbl_P2Name.Text = "Player 2: ";
             // 
@@ -128,16 +134,17 @@
             this.lbl_P1Score.AutoSize = true;
             this.lbl_P1Score.Location = new System.Drawing.Point(17, 53);
             this.lbl_P1Score.Name = "lbl_P1Score";
-            this.lbl_P1Score.Size = new System.Drawing.Size(12, 15);
+            this.lbl_P1Score.Size = new System.Drawing.Size(21, 30);
             this.lbl_P1Score.TabIndex = 1;
             this.lbl_P1Score.Text = "-";
             // 
             // lbl_P1Name
             // 
             this.lbl_P1Name.AutoSize = true;
+            this.lbl_P1Name.Font = new System.Drawing.Font("Century Gothic", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
             this.lbl_P1Name.Location = new System.Drawing.Point(17, 26);
             this.lbl_P1Name.Name = "lbl_P1Name";
-            this.lbl_P1Name.Size = new System.Drawing.Size(54, 15);
+            this.lbl_P1Name.Size = new System.Drawing.Size(77, 21);
             this.lbl_P1Name.TabIndex = 0;
             this.lbl_P1Name.Text = "Player 1: ";
             // 
@@ -145,6 +152,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(57)))), ((int)(((byte)(99)))), ((int)(((byte)(132)))));
             this.ClientSize = new System.Drawing.Size(954, 546);
             this.Controls.Add(this.groupBox3);
             this.Controls.Add(this.lbl_Timer);

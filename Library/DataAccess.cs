@@ -23,8 +23,8 @@ namespace Library
                 SqlCommand sqlCommand = new SqlCommand();
 
                 sqlCommand.CommandType = System.Data.CommandType.Text;
-                sqlCommand.CommandText = "select Players.ID, Players.Name, Score.GamesPlayed, Score.GamesWon, Score.GamesLost, Score.GamesTied" +
-                    " from Players inner join Score on Players.ID = Score.ID ";
+                sqlCommand.CommandText = "select Players.PlayerID, Players.Name, Score.GamesPlayed, Score.GamesWon, Score.GamesLost, Score.GamesTied" +
+                    " from Players inner join Score on Players.PlayerID = Score.ID ";
                 sqlCommand.Connection = connection;
 
                 SqlDataReader reader = sqlCommand.ExecuteReader();
@@ -107,7 +107,7 @@ namespace Library
                 connection.Open();
 
                 int id = 0;
-                sqlCommand.CommandText = "SELECT TOP 1 * FROM Players ORDER BY ID DESC";
+                sqlCommand.CommandText = "SELECT TOP 1 * FROM Players ORDER BY PlayerID DESC";
 
                 SqlDataReader reader = sqlCommand.ExecuteReader();
 
@@ -223,7 +223,28 @@ namespace Library
 
                 sqlCommand.CommandType = System.Data.CommandType.Text;
                 sqlCommand.Connection = connection;
-                sqlCommand.CommandText = "DELETE FROM Players WHERE ID = @id";
+                sqlCommand.CommandText = "DELETE FROM Players WHERE PlayerID = @id";
+                sqlCommand.Parameters.AddWithValue("@id", player.Id);
+
+                sqlCommand.ExecuteNonQuery();
+
+                if (connection.State == System.Data.ConnectionState.Open)
+                {
+                    connection.Close();
+                }
+
+                // - - -
+                //***[ CLEAR PARAMS ]
+
+                sqlCommand.Parameters.Clear();
+
+                // - - - - -
+
+                connection.Open();
+                
+                sqlCommand.CommandType = System.Data.CommandType.Text;
+                sqlCommand.Connection = connection;
+                sqlCommand.CommandText = "DELETE FROM Score WHERE ID = @id";
                 sqlCommand.Parameters.AddWithValue("@id", player.Id);
 
                 sqlCommand.ExecuteNonQuery();
@@ -237,6 +258,13 @@ namespace Library
             catch
             {
 
+            }
+            finally
+            {
+                if (connection.State == System.Data.ConnectionState.Open)
+                {
+                    connection.Close();
+                }
             }
         }
     }

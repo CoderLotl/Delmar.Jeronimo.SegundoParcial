@@ -1,9 +1,9 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <ClassDiagram MajorVersion="1" MinorVersion="1">
-  <Class Name="Library.Game" Collapsed="true">
+  <Class Name="Library.Game">
     <Position X="2.5" Y="0.5" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAgAAAAAAQAAA=</HashCode>
+      <HashCode>AAAAAgAAAAEAFAIBAAASCAAAAAgAAAAwgAQAAAAUAAI=</HashCode>
       <FileName>Game.cs</FileName>
     </TypeIdentifier>
   </Class>
@@ -13,26 +13,32 @@
       <HashCode>AEABAABAAQAAAAAAAAAAAAAAABAAAAAQAAAAAAAAAAA=</HashCode>
       <FileName>Card.cs</FileName>
     </TypeIdentifier>
-    <Lollipop Position="0.2" Collapsed="true" />
   </Class>
-  <Class Name="Library.DataAccess" Collapsed="true">
+  <Class Name="Library.DataAccess">
     <Position X="6" Y="0.5" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>AAAAACAAAAAAAAAAAAAAAAAAAAAAEAAAAAAAAAEAAAA=</HashCode>
+      <HashCode>AAAAACAAAAAAAABAAAAAAAAAAAAAAAAAAAAAAAEAAQA=</HashCode>
       <FileName>DataAccess.cs</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="Library.GameMechanics">
     <Position X="7.75" Y="0.5" Width="1.5" />
+    <NestedTypes>
+      <Delegate Name="Library.GameMechanics.Notify" Collapsed="true">
+        <TypeIdentifier>
+          <NewMemberFileName>GameMechanics.cs</NewMemberFileName>
+        </TypeIdentifier>
+      </Delegate>
+    </NestedTypes>
     <TypeIdentifier>
-      <HashCode>AAAAAAAAAIgAAAAAAAIAAAAAAAAAAAAAIAAAAAAAAAA=</HashCode>
+      <HashCode>AAAAAAAAAIgAmAAAAAIAQAACAAAgIAAAIAAAAAAAAgA=</HashCode>
       <FileName>GameMechanics.cs</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="Library.GameTruco">
     <Position X="9.5" Y="0.5" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>AAAAAAAQAABAAAAAAAAAAAAAEAAABEAAgABAEAAQAAA=</HashCode>
+      <HashCode>ACgAQgAQAABCAAAAAAAQAACAEBAABABwgBpFFAAQABA=</HashCode>
       <FileName>GameTruco.cs</FileName>
     </TypeIdentifier>
     <Lollipop Orientation="Bottom" Position="0.1" />
@@ -40,47 +46,47 @@
   <Class Name="Library.Player">
     <Position X="11.75" Y="0.5" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>IAACAAAAACAQAAAgEAAAAAQAAAAEAAABAAAAASAAAgA=</HashCode>
+      <HashCode>IAACAAAAAAAQAAAEEAAAAAQAAAAEAAABAAAAASAAAgA=</HashCode>
       <FileName>Player.cs</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="Library.Room">
     <Position X="0.75" Y="0.5" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>AAAQAAAAAACAAAAAAAAACAQABAgkAAAAIAIAAIAABAA=</HashCode>
+      <HashCode>AAAAAAABAACAAQAAAAAAAAQABAAkAAAAIAIAAIAABAA=</HashCode>
       <FileName>Room.cs</FileName>
     </TypeIdentifier>
   </Class>
-  <Interface Name="Library.ICardGame">
-    <Position X="2.5" Y="2.75" Width="1.5" />
+  <Class Name="Library.JsonSerializer&lt;T&gt;">
+    <Position X="0.75" Y="4.5" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>AAAAAAAQAABAAAAAAAAAAAAAEAAABAAAAAAAEAAAAAA=</HashCode>
+      <HashCode>AAAAAAAAAAAAAAAAAAACAAAAACBAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>DataSerializer.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Interface Name="Library.ICardGame">
+    <Position X="4.25" Y="3.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAgAAAAQAABCAAAAAAAAAAAAEAAABAAAAAJEEAAAAAA=</HashCode>
       <FileName>ICardGame.cs</FileName>
     </TypeIdentifier>
   </Interface>
-  <Interface Name="Library.IToken">
-    <Position X="4.25" Y="3.75" Width="1.5" />
-    <TypeIdentifier>
-      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
-      <FileName>IToken.cs</FileName>
-    </TypeIdentifier>
-  </Interface>
   <Enum Name="Library.GameType">
-    <Position X="6" Y="3" Width="1.5" />
+    <Position X="6" Y="4.25" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAIAAAAAAAAAgAAAAAAAAA=</HashCode>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAIAAAAAAAAAAAAAAAAAAA=</HashCode>
       <FileName>Game.cs</FileName>
     </TypeIdentifier>
   </Enum>
   <Enum Name="Library.GameSubType">
-    <Position X="7.75" Y="2.75" Width="1.5" />
+    <Position X="6" Y="5.25" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>AAAAAAAAAAIAAEAAAAAAAAAAAAAAAEAAAAAIAAAAAAI=</HashCode>
+      <HashCode>AAAAAAAAAAAAAEAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
       <FileName>Game.cs</FileName>
     </TypeIdentifier>
   </Enum>
   <Enum Name="Library.Suit">
-    <Position X="6" Y="1.25" Width="1.5" />
+    <Position X="6" Y="2.5" Width="1.5" />
     <TypeIdentifier>
       <HashCode>AAAACAAAAAAAAAQAAAAABAAAAAAAAAAAAAAAAAAAACA=</HashCode>
       <FileName>GameTruco.cs</FileName>

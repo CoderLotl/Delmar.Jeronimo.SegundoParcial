@@ -355,5 +355,12 @@ namespace Main
                 DrawPlayersList();
             }
         }
+
+        private void btn_Statistics_Click(object sender, EventArgs e)
+        {
+            FrmStatistics statistics = new FrmStatistics();
+
+            statistics.Show();
+        }
     }
 }
