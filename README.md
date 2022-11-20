@@ -69,7 +69,71 @@ This works together with **Generics**, as I said before. Even if I don't make a 
 ### INTERFACES
 
 This is a rather controvertial subject in my program. - Based on the previous experiences and reviews, where I was said that my program lacked of flexibility and possibilities for an expansion in a future, I wrote this program thinking from the start in the possibility of a future expansion.
+For this I made "Game" as an abstract class. Every room contains a game, but not every game is the same. But every game shares some basic, raw concepts with every other possible game.
+Since C# doesn't allow multi-inheritance, I created then interfaces for Cards and Dices games; may the need ever arise for expanding the program in those directions, the implementation of such kind of games would be smooth, and wouldn't require any rewriting of the core aspects of the program. - For Cards, again, I created a single kind of Interface, which is Truco.
+
+So my class GameTruco inherits from Game and ICard. It has the basic aspects of a game (a start and an end) and the basic aspects of a card game (shuffle a deck, get cards, play cards, return cards to the deck, etc.).
+
+If I ever happen to make other games, I could either group them by their interfaces, or modify them by modifying something in their interfaces, and this wouldn't affect all games but just those that would inherit from those particular interfaces.
+
+The usefulness of the subject here, then, is debatable.
+
+### DELEGATES
+
+They are used for storing methods of the interface and then using them in the Class Library at some specifict points, generally related to the prompting of message boxes or performing changes on controls nested in the forms.
+Another use of delegates (an use I had to do because there's no other way) is for when a control is affected from a thread different to which the control has been created on; there I need to execute an invokation inside of which I need to declare a delegate with the piece of code I need to execute.
+
+### TASKS
+
+The very 1st half of the core of the program.
+Every room in this program is an object, which contains a game. I made that clear before. - Inside of the room, the very moment the room is instanced, the constructor defines a task which is launched right away and contains the method 'Play' of whatever game the room has instanced inside. So the moment a room is created, the game inside is started to be played. A thread for every room.
+
+Given the fact that this is one of the first aspects of the program I tackled, and given I did it by my own, the implementation of this subject differs from the cathedra. I don't start the task with a Canellation Token, but the Cancellation Token is **inside** the room as a property, and I can access it from outside through a method.
+So if I ever need to stop the program, I just run the method of the particular room, and the game stops.
+
+### EVENTS
+
+Another early-tackled subject, this is the 2nd half of the core of the program.
+The approach has 2 examples here. The first, quite simple, is a notification of changes whenever something is added to the game's log. This is heard by a method of the view form designated to watch that specific game, which in turn refreshes the text box that acts as a monitor for the game.
+The second approach is more intrincate, and happens when the game finishes, wich fires an event that tells the view form to start the countdown. When the countdown. This is heard at the Lobby too, at which the visual representation of the room in the tree view changes to show the state of the game.
+When the countdown finishes, **the form unsubscribes itself from the game**, and then proceeds to close itself from the thread the game is in.
+
+### UNIT TESTING
+
+There's not much of this in the program. There's only 1 unit testing.
+
+---
+---
+
+### ADVANTAGES AND DISADVANTAGES OF MY PROGRAM
+
+### **Advantages**
+
+It's flexible, dynamic, and easy to use.
+The game can be easily expanded for any other game.
+If the user double-clicks on the players either on the players list (both in the Lobby and the view form) or the nodes representing them, the user may see a message with the statistics of the clicked player.
+The program has only 2 important forms, and the rest of the forms are transitory.
 
 
+### **Disadvantages**
+
+I totally forgot about the history of games and matches, so that feature doesn't exist at all. The statistics is just a datagrid showing all the players with their played, won, lost, and tied games. There's no record of the matches.
+The graphic part of the game sucks. Most of the time spent was focused on the proper functionality of the program. - The game logic took 1 day alone, and although it has been one of the easiest parts to develop, it's a labyrinth of interconected methods, some of which are there only to cut a bigger method down into specific and more simple bits.
+
+Given all this, the graphic side suffered horribly, reduced to just 5 hours of development. - Plans for a graphic implementation of the cards were scrapped, same as allowing the user to play the game.
+
+---
+
+### Final Notes and Thoughts:
+
+* I must admit that I still don't understand well the concept of testing. While I get the mechanics of testing, I can't figure the need for testing something, or get why I would ever test some method, for which purpose.
+This goes indoubtedly glued to the fact that I try to generate code that's the most fail-proof possible, as I used to do in C; if there's a chance for my code to crash, I feel the need to foresee it and prevent that from happening.
+I tried to change this set of mind during this TP, but I couldn't. I understand the mechanics of testing, but the whole majority of my code is not easy to test and I probably couldn't think of a situation for my code to fail, or a reason for making it fail.
+
+* I use to work on projects for my own when I'm bored. This time I took this semester with calm, trying not to hurry (too much). So I didn't experiment as much as I did in the previous semester, and I didn't investigate ahead of the class. Therefore, I enjoyed it. May I pass or not, it was a nice experience.
+
+* Some parts of the code I developed here I used it for my own projects. Opposite to what happened with the 1st TP, this one didn't nourish from my own projects as much as my projects nourished from the code written here.
+
+* The program is not written based on the MVP model only because I was already by the 50% of it when that model whas shown in class. Shame on me :(
 
 
