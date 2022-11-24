@@ -25,11 +25,11 @@ namespace Library
 
             this.gameConcluded = false;
                         
-            this.newGame = InitializeGame(gameType, gameSubType);
+            this.newGame = InitializeGame(player1, player2, gameType, gameSubType);
 
             this.newGame.Action = action;
                         
-            this.newTask = Task.Run(() => this.newGame.Play(player1, player2));            
+            this.newTask = Task.Run(() => this.newGame.Play());            
         }
 
         public string Name { get => name; }        
@@ -38,7 +38,7 @@ namespace Library
         public Game NewGame { get => newGame; set => newGame = value; }
         public bool GameConcluded { get => gameConcluded; set => gameConcluded = value; }
 
-        private Game InitializeGame(GameType gameType, GameSubType gameSubType)
+        private Game InitializeGame(Player player1, Player player2, GameType gameType, GameSubType gameSubType)
         {
             Game newGame = null;
 
@@ -46,7 +46,7 @@ namespace Library
             {
                 if (gameSubType is GameSubType.Truco)
                 {
-                    newGame = new GameTruco();
+                    newGame = new GameTruco(player1, player2);
                 }
             }
 

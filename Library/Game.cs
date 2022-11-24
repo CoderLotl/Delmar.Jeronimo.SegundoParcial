@@ -19,6 +19,8 @@ namespace Library
 
     public abstract class Game
     {
+        Player player1;
+        Player player2;
         string log;
         string cleanLog;
         int playerOneScore;
@@ -43,10 +45,12 @@ namespace Library
         public string CleanLog { get => cleanLog; set => cleanLog = value; }
         public CancellationTokenSource CancelToken { get => cancelToken; set => cancelToken = value; }
         public Action<string> Action { get => action; set => action = value; }
+        public Player Player1 { get => player1; set => player1 = value; }
+        public Player Player2 { get => player2; set => player2 = value; }
 
         //----------------------------------------
 
-        public abstract void Play(Player player1, Player player2);
+        public abstract void Play();
         public abstract void EndRound();
         public abstract void EndGame();
         

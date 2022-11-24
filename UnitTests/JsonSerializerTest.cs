@@ -27,25 +27,7 @@ namespace LibraryTest
         }
 
         [TestMethod]
-        public void SerializeCreatesFileSuccessfully()
-        {
-            //ARRANGE
-            string fileName = "testFile";
-            HistoryRoom historyRoom = new();
-            historyRoom.RoomName = "test";
-            historyRoom.GameLog = "test";
-            JsonSerializer<HistoryRoom> jsonSerializer = new JsonSerializer<HistoryRoom>(fileName);
-
-            //ACT
-            jsonSerializer.Serialize(historyRoom);
-
-            //ARRANGE
-            Assert.IsTrue(File.Exists(".\\" + fileName + ".json"));
-            File.Delete(".\\" + fileName + ".json");
-        }
-
-        [TestMethod]
-        public void DeserializeReturnsExistingFile()
+        public void Deserialize_OK()
         {
             //ARRANGE
             string fileName = "testFile2";
@@ -59,6 +41,24 @@ namespace LibraryTest
 
             //ARRANGE
             Assert.IsNotNull(historyRoom);
+            File.Delete(".\\" + fileName + ".json");
+        }
+
+        [TestMethod]
+        public void Serialize_OK()
+        {
+            //ARRANGE
+            string fileName = "testFile";
+            HistoryRoom historyRoom = new();
+            historyRoom.RoomName = "test";
+            historyRoom.GameLog = "test";
+            JsonSerializer<HistoryRoom> jsonSerializer = new JsonSerializer<HistoryRoom>(fileName);
+
+            //ACT
+            jsonSerializer.Serialize(historyRoom);
+
+            //ARRANGE
+            Assert.IsTrue(File.Exists(".\\" + fileName + ".json"));
             File.Delete(".\\" + fileName + ".json");
         }
     }

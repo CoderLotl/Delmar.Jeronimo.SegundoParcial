@@ -18,7 +18,7 @@ namespace Library
     }
 
     public class GameTruco : Game, ICardGame
-    {
+    {        
         public override event EventHandler NotifyLogUpdate;
         public override event EventHandler NotifyEndGame;
 
@@ -26,10 +26,13 @@ namespace Library
         public List<Card> HandPlayerOne { get; set; }
         public List<Card> HandPlayerTwo { get; set; }
         public List<Card> PlayedPlayerOne { get; set; }
-        public List<Card> PlayedPlayerTwo { get; set; }        
+        public List<Card> PlayedPlayerTwo { get; set; } 
+        //public override 
 
-        public GameTruco()
-        {            
+        public GameTruco(Player player1, Player player2)
+        {
+            this.Player1 = player1;
+            this.Player2 = player2;
             this.Deck = GenerateDeck();
             this.Log = "";
             this.CleanLog = "";
@@ -172,7 +175,7 @@ namespace Library
             }
             else
             {
-                throw new ArgumentNullException();
+                throw new EmptyDeckException("The deck is empty.");
             }
         }
 
@@ -231,14 +234,14 @@ namespace Library
 
         
 
-        public override void Play(Player player1, Player player2)
+        public override void Play()
         {
-            Player playerOne;
+            Player playerOne = this.Player1;
             Player playerTwo;
             
             while(this.Turn < 4 && this.CancelToken.IsCancellationRequested != true)
             {
-                ChoosePlayerOne(player1, player2, out playerOne, out playerTwo);
+                ChoosePlayerOne(Player1, Player2, out playerOne, out playerTwo);
                 this.Turn++;
                 PlayRound(playerOne, playerTwo);
                 Thread.Sleep(2000);                
@@ -248,11 +251,11 @@ namespace Library
             NotifyLogUpdate?.Invoke(this, EventArgs.Empty);
             Thread.Sleep(2000);
 
-            DecideWinner(player1, player2);
+            DecideWinner(Player1, Player2);
 
             Announce(@" \b\i Updating players statics...\i0\b0\line\line");
             NotifyLogUpdate?.Invoke(this, EventArgs.Empty);
-            UpdatePlayersStats(player1, player2);
+            UpdatePlayersStats(Player1, Player2);
                         
             NotifyEndGame?.Invoke(this, EventArgs.Empty);
 
@@ -560,9 +563,7 @@ namespace Library
                 currentPlayer = player2;
                 oponent = player1;
                 currentPlayerHand = HandPlayerTwo;
-            }
-
-            
+            }            
 
             if(envidoCalled == false || (envidoCalled == true && envidoWanted == 0))
             {
