@@ -15,19 +15,20 @@ namespace Library
         Game newGame;
         Task newTask;
 
-        public Room(string name, Player player1, Player player2, GameType gameType, GameSubType gameSubType)
+        public Room(string name, Player player1, Player player2, GameType gameType, GameSubType gameSubType, Action<string> action)
         {
-            this.name = name + " | Game type: "+ gameType + " | Game sub-type: " + gameSubType;
-            // --- SETTING THE PLAYERS
+            this.name = name + " - Game type "+ gameType + " - Game sub-type " + gameSubType;
+            
             this.players = new List<Player>();
+            
             this.players.Add(player1); this.players.Add(player2);
 
             this.gameConcluded = false;
-
-            // --- SETTING THE GAME BY THE TYPE AND SUBTYPE
+                        
             this.newGame = InitializeGame(gameType, gameSubType);
-            // --- STARTING A GAME
-            
+
+            this.newGame.Action = action;
+                        
             this.newTask = Task.Run(() => this.newGame.Play(player1, player2));            
         }
 

@@ -24,6 +24,7 @@ namespace Main
         bool subscribed;
         Task Timer;
         Action<FrmRoom> FormClose;
+        Action<string> Warning = (string text) => MessageBox.Show(text);
 
         public bool Subscribed { get => subscribed; }
         public Room Room { get => room; }
@@ -131,7 +132,10 @@ namespace Main
 
         private void StartTimer()
         {
-            int timer = 120;
+            int timer = 10;
+            DataAccess dataAccess = new DataAccess(GameMechanics.ConnectionString);
+            DateTime dateTime;
+            
 
             if (InvokeRequired)
             {
@@ -157,6 +161,22 @@ namespace Main
                 Thread.Sleep(1000);
             }
             GameConcluded = true;
+
+            dateTime = DateTime.Now;
+            if(dataAccess.TestConnection() == true)
+            {
+                dataAccess.WriteMatchDown(room, dateTime);
+            }
+            else
+            {
+                MessageBox.Show("Couldn't connect to the DataBase to save the match's history.\nSaving it as a JSON file in the parent folder.");
+
+                HistoryRoom historyRoom = new HistoryRoom(room.Name + " - Players " + room.Players[0].Name + " - " + room.Players[1].Name + " - Date " + dateTime.ToString("yyyyMMdd_hhmmss"), room.NewGame.Log, dateTime);
+                JsonSerializer<HistoryRoom> jsonSerializer = new JsonSerializer<HistoryRoom>(historyRoom.RoomName);
+                jsonSerializer.Serialize(historyRoom);
+            }
+            
+
             Unsubscribe();
 
             if (InvokeRequired)

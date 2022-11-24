@@ -19,13 +19,14 @@ namespace Main
         GameSubType gameSubType;
         Room newRoom;
         string roomName;
+        Action<string> warning;
                 
         public Room NewRoom { get => newRoom;}        
 
-        public FrmAddRoom()
+        public FrmAddRoom(Action<string> warning)
         {
             InitializeComponent();
-            
+            this.warning = warning;
             PopulateCombobox();
         }
 
@@ -78,18 +79,37 @@ namespace Main
 
         private void Btn_Accept_Click(object sender, EventArgs e)
         {
-            player1 = (Player)comboBox1.SelectedItem;
-            player2 = (Player)comboBox2.SelectedItem;
+            if(comboBox1.SelectedItem != null && comboBox2.SelectedItem != null)
+            {
+                player1 = (Player)comboBox1.SelectedItem;
+                player2 = (Player)comboBox2.SelectedItem;
 
-            gameType = GameType.Cards;
-            gameSubType = GameSubType.Truco;
+                gameType = GameType.Cards;
+                gameSubType = GameSubType.Truco;
 
-            roomName = "Room #" + (GameMechanics.ID + 1).ToString();
-            GameMechanics.ID++;
+                roomName = "Room #" + (GameMechanics.ID + 1).ToString();
+                GameMechanics.ID++;
 
-            newRoom = new Room(roomName, player1, player2, gameType, gameSubType);
+                newRoom = new Room(roomName, player1, player2, gameType, gameSubType, warning);
 
-            this.DialogResult = DialogResult.OK;
+                this.DialogResult = DialogResult.OK;
+            }
+            else
+            {
+                label1.Visible = true;
+                label1.Text = "You must select 2 players to start a game.";
+            }
+
+        }
+
+        private void comboBox1_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            label1.Visible = false;
+        }
+
+        private void comboBox2_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            label1.Visible = false;
         }
     }
 }

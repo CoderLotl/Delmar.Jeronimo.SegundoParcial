@@ -33,13 +33,14 @@
             this.groupBox1 = new System.Windows.Forms.GroupBox();
             this.groupBox3 = new System.Windows.Forms.GroupBox();
             this.label2 = new System.Windows.Forms.Label();
-            this.Btn_EndGame = new System.Windows.Forms.Button();
-            this.Btn_CreateRoom = new System.Windows.Forms.Button();
+            this.btn_EndGame = new System.Windows.Forms.Button();
+            this.btn_CreateRoom = new System.Windows.Forms.Button();
             this.listBox1 = new System.Windows.Forms.ListBox();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
             this.btn_NewPlayer = new System.Windows.Forms.Button();
             this.btn_DeletePlayer = new System.Windows.Forms.Button();
             this.btn_Statistics = new System.Windows.Forms.Button();
+            this.btn_History = new System.Windows.Forms.Button();
             this.groupBox1.SuspendLayout();
             this.groupBox3.SuspendLayout();
             this.groupBox2.SuspendLayout();
@@ -71,8 +72,8 @@
             this.groupBox1.BackColor = System.Drawing.Color.DarkSlateGray;
             this.groupBox1.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
             this.groupBox1.Controls.Add(this.groupBox3);
-            this.groupBox1.Controls.Add(this.Btn_EndGame);
-            this.groupBox1.Controls.Add(this.Btn_CreateRoom);
+            this.groupBox1.Controls.Add(this.btn_EndGame);
+            this.groupBox1.Controls.Add(this.btn_CreateRoom);
             this.groupBox1.Controls.Add(this.treeView1);
             this.groupBox1.Controls.Add(this.label1);
             this.groupBox1.Font = new System.Drawing.Font("Century Gothic", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
@@ -102,28 +103,29 @@
             this.label2.Size = new System.Drawing.Size(0, 17);
             this.label2.TabIndex = 0;
             // 
-            // Btn_EndGame
+            // btn_EndGame
             // 
-            this.Btn_EndGame.Font = new System.Drawing.Font("Century Gothic", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
-            this.Btn_EndGame.Location = new System.Drawing.Point(419, 419);
-            this.Btn_EndGame.Name = "Btn_EndGame";
-            this.Btn_EndGame.Size = new System.Drawing.Size(75, 102);
-            this.Btn_EndGame.TabIndex = 3;
-            this.Btn_EndGame.Text = "End Game";
-            this.Btn_EndGame.UseVisualStyleBackColor = true;
-            this.Btn_EndGame.Click += new System.EventHandler(this.Btn_EndGame_Click);
+            this.btn_EndGame.Enabled = false;
+            this.btn_EndGame.Font = new System.Drawing.Font("Century Gothic", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+            this.btn_EndGame.Location = new System.Drawing.Point(419, 419);
+            this.btn_EndGame.Name = "btn_EndGame";
+            this.btn_EndGame.Size = new System.Drawing.Size(75, 102);
+            this.btn_EndGame.TabIndex = 3;
+            this.btn_EndGame.Text = "End Game";
+            this.btn_EndGame.UseVisualStyleBackColor = true;
+            this.btn_EndGame.Click += new System.EventHandler(this.Btn_EndGame_Click);
             // 
-            // Btn_CreateRoom
+            // btn_CreateRoom
             // 
-            this.Btn_CreateRoom.Enabled = false;
-            this.Btn_CreateRoom.Font = new System.Drawing.Font("Century Gothic", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
-            this.Btn_CreateRoom.Location = new System.Drawing.Point(6, 423);
-            this.Btn_CreateRoom.Name = "Btn_CreateRoom";
-            this.Btn_CreateRoom.Size = new System.Drawing.Size(75, 102);
-            this.Btn_CreateRoom.TabIndex = 2;
-            this.Btn_CreateRoom.Text = "Create New Room";
-            this.Btn_CreateRoom.UseVisualStyleBackColor = true;
-            this.Btn_CreateRoom.Click += new System.EventHandler(this.Btn_CreateRoom_Click);
+            this.btn_CreateRoom.Enabled = false;
+            this.btn_CreateRoom.Font = new System.Drawing.Font("Century Gothic", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+            this.btn_CreateRoom.Location = new System.Drawing.Point(6, 423);
+            this.btn_CreateRoom.Name = "btn_CreateRoom";
+            this.btn_CreateRoom.Size = new System.Drawing.Size(75, 102);
+            this.btn_CreateRoom.TabIndex = 2;
+            this.btn_CreateRoom.Text = "Create New Room";
+            this.btn_CreateRoom.UseVisualStyleBackColor = true;
+            this.btn_CreateRoom.Click += new System.EventHandler(this.Btn_CreateRoom_Click);
             // 
             // listBox1
             // 
@@ -152,10 +154,11 @@
             // 
             // btn_NewPlayer
             // 
+            this.btn_NewPlayer.Enabled = false;
             this.btn_NewPlayer.Font = new System.Drawing.Font("Century Gothic", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
             this.btn_NewPlayer.Location = new System.Drawing.Point(1085, 355);
             this.btn_NewPlayer.Name = "btn_NewPlayer";
-            this.btn_NewPlayer.Size = new System.Drawing.Size(100, 55);
+            this.btn_NewPlayer.Size = new System.Drawing.Size(100, 70);
             this.btn_NewPlayer.TabIndex = 5;
             this.btn_NewPlayer.Text = "Create New Player";
             this.btn_NewPlayer.UseVisualStyleBackColor = true;
@@ -163,8 +166,9 @@
             // 
             // btn_DeletePlayer
             // 
+            this.btn_DeletePlayer.Enabled = false;
             this.btn_DeletePlayer.Font = new System.Drawing.Font("Century Gothic", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
-            this.btn_DeletePlayer.Location = new System.Drawing.Point(1085, 435);
+            this.btn_DeletePlayer.Location = new System.Drawing.Point(1085, 441);
             this.btn_DeletePlayer.Name = "btn_DeletePlayer";
             this.btn_DeletePlayer.Size = new System.Drawing.Size(100, 55);
             this.btn_DeletePlayer.TabIndex = 6;
@@ -174,6 +178,7 @@
             // 
             // btn_Statistics
             // 
+            this.btn_Statistics.Enabled = false;
             this.btn_Statistics.Font = new System.Drawing.Font("Century Gothic", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
             this.btn_Statistics.Location = new System.Drawing.Point(1085, 515);
             this.btn_Statistics.Name = "btn_Statistics";
@@ -183,6 +188,18 @@
             this.btn_Statistics.UseVisualStyleBackColor = true;
             this.btn_Statistics.Click += new System.EventHandler(this.btn_Statistics_Click);
             // 
+            // btn_History
+            // 
+            this.btn_History.Enabled = false;
+            this.btn_History.Font = new System.Drawing.Font("Century Gothic", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+            this.btn_History.Location = new System.Drawing.Point(1085, 587);
+            this.btn_History.Name = "btn_History";
+            this.btn_History.Size = new System.Drawing.Size(100, 55);
+            this.btn_History.TabIndex = 8;
+            this.btn_History.Text = "History";
+            this.btn_History.UseVisualStyleBackColor = true;
+            this.btn_History.Click += new System.EventHandler(this.btn_History_Click);
+            // 
             // FrmLobby
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
@@ -191,6 +208,7 @@
             this.BackgroundImage = global::Main.Properties.Resources.cabecera_truc;
             this.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
             this.ClientSize = new System.Drawing.Size(1235, 654);
+            this.Controls.Add(this.btn_History);
             this.Controls.Add(this.btn_Statistics);
             this.Controls.Add(this.btn_DeletePlayer);
             this.Controls.Add(this.btn_NewPlayer);
@@ -216,12 +234,13 @@
         private System.Windows.Forms.GroupBox groupBox1;
         private System.Windows.Forms.ListBox listBox1;
         private System.Windows.Forms.GroupBox groupBox2;
-        private System.Windows.Forms.Button Btn_EndGame;
-        private System.Windows.Forms.Button Btn_CreateRoom;
+        private System.Windows.Forms.Button btn_EndGame;
+        private System.Windows.Forms.Button btn_CreateRoom;
         private System.Windows.Forms.GroupBox groupBox3;
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.Button btn_NewPlayer;
         private System.Windows.Forms.Button btn_DeletePlayer;
         private System.Windows.Forms.Button btn_Statistics;
+        private System.Windows.Forms.Button btn_History;
     }
 }

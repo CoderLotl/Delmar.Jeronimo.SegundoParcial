@@ -24,7 +24,8 @@ namespace Library
         int playerOneScore;
         int playerTwoScore;
         int match;
-        int turn;       
+        int turn;
+        Action<string> action;
 
         private CancellationTokenSource cancelToken;
 
@@ -41,9 +42,10 @@ namespace Library
         public int Turn { get => turn; set => turn = value; }
         public string CleanLog { get => cleanLog; set => cleanLog = value; }
         public CancellationTokenSource CancelToken { get => cancelToken; set => cancelToken = value; }
+        public Action<string> Action { get => action; set => action = value; }
 
         //----------------------------------------
-        
+
         public abstract void Play(Player player1, Player player2);
         public abstract void EndRound();
         public abstract void EndGame();

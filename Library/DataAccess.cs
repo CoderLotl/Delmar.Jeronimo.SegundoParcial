@@ -10,14 +10,28 @@ namespace Library
 {
     public class DataAccess
     {
-        public void GetPlayers(Action<string> action, string connectionStringParam)
+        string connectionString;
+
+        public DataAccess(string connectionString)
+        {
+            this.connectionString = connectionString;
+        }
+
+        /// <summary>
+        /// THIS METHOD TRIES TO CONNECT TO THE DATABASE AND RETRIEVES A LIST OF PLAYERS, WHICH IS LATER SET
+        /// IN THE STATIC LIST OF PLAYER.
+        /// MAY THE CONNECTION BE SUCCESSFUL BUT ANY OTHER EXCEPTION OCCUR, THE METHOD WILL LOAD A LIST OF MOCK
+        /// PLAYERS TO THE GAME AND EXECUTE THE WARNING METHOD PASSED BY THE DELEGATE.
+        /// </summary>
+        /// <param name="action"></param>
+        public void GetPlayers(Action<string> action)
         {
             List<Player> playerList = new List<Player>();
-            string connectionString = connectionStringParam;
-            SqlConnection connection = new SqlConnection(connectionString);
+            
+            SqlConnection connection = new SqlConnection(this.connectionString);
 
             try
-            {
+            {                
                 connection.Open();
 
                 SqlCommand sqlCommand = new SqlCommand();
@@ -43,21 +57,13 @@ namespace Library
                 }
 
                 GameMechanics.Players = playerList;
-                action("Database loaded successfully.");
-                
+                action("Database loaded successfully.");                
             }
 
             catch (Exception exception)
             {
                 action("Unable to connect with Database.\nLoading mock bots...");
-                string[] names = {"Ana-BOT", "Rob-BOT", "Laura-BOT", "Jhon-BOT", "Danara-BOT", "Luke-BOT" };
-
-                for (int i = 0; i < 6; i++)
-                {
-                    Player newPlayer = new Player(i + 1, names[i], 0, 0, 0, 0);
-                    playerList.Add(newPlayer);
-                }
-                GameMechanics.Players = playerList;
+                LoadMockBots(playerList);
             }
             finally
             {
@@ -68,16 +74,32 @@ namespace Library
             }
         }
 
-        // --------------------------
-
-        public void InsertPlayer(Player player)
+        /// <summary>
+        /// THIS METHOD LOADS A LIST OF MOCK PLAYERS.
+        /// </summary>
+        /// <param name="playerList"></param>
+        public void LoadMockBots(List<Player> playerList)
         {
-            string connectionString = "Server=ARIS-PC\\SERVIDORPARCIAL;Database=Parcial;Trusted_Connection=True;TrustServerCertificate=True";
-            SqlConnection connection = new SqlConnection(connectionString);
+            
+            string[] names = { "Ana-BOT", "Rob-BOT", "Laura-BOT", "Jhon-BOT", "Danara-BOT", "Luke-BOT" };
+
+            for (int i = 0; i < 6; i++)
+            {
+                Player newPlayer = new Player(i + 1, names[i], 0, 0, 0, 0);
+                playerList.Add(newPlayer);
+            }
+            GameMechanics.Players = playerList;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="player"></param>
+        public void InsertPlayer(Player player, Action<string> action)
+        {
+            SqlConnection connection = new SqlConnection(this.connectionString);
             try
             {
-                //***[ INSERT NEW PLAYER ]
-
                 connection.Open();
 
                 SqlCommand sqlCommand = new SqlCommand();
@@ -94,15 +116,7 @@ namespace Library
                     connection.Close();
                 }
 
-                // - - - - -
-
-                //***[ CLEAR PARAMS ]
-
                 sqlCommand.Parameters.Clear();
-
-                // - - - - -
-
-                //***[ GET NEW INSERTED ID ]
 
                 connection.Open();
 
@@ -117,22 +131,14 @@ namespace Library
                     id = reader.GetInt32(0);
                 }
 
-                // * * * * * !!!
-                player.Id = id; // HERE I GET THE ID THE TABLE GAVE TO MY NEW PLAYER
-                // * * * * * !!!
+                player.Id = id;
 
                 if (connection.State == System.Data.ConnectionState.Open)
                 {
                     connection.Close();
                 }
 
-                //***[ CLEAR PARAMS ]
-
                 sqlCommand.Parameters.Clear();
-
-                // - - - - -
-
-                //***[ GET NEW INSERTED ID ]
 
                 connection.Open();
 
@@ -154,7 +160,7 @@ namespace Library
             }
             catch
             {
-
+                action("Some unexpected exception happened.\nThe player won't be saved to the Database.");
             }
             finally
             {
@@ -166,12 +172,9 @@ namespace Library
 
         }
 
-        // --------------------------
-
         public void UpdatePlayer(Player player)
-        {
-            string connectionString = "Server=ARIS-PC\\SERVIDORPARCIAL;Database=Parcial;Trusted_Connection=True;TrustServerCertificate=True";
-            SqlConnection connection = new SqlConnection(connectionString);
+        {            
+            SqlConnection connection = new SqlConnection(this.connectionString);
             try
             {
                 connection.Open();
@@ -209,12 +212,10 @@ namespace Library
 
         }
 
-        // --------------------------
-
-        public void DeletePlayer(Player player)
+        public void DeletePlayer(Player player, Action<string> action)
         {
-            string connectionString = "Server=ARIS-PC\\SERVIDORPARCIAL;Database=Parcial;Trusted_Connection=True;TrustServerCertificate=True";
-            SqlConnection connection = new SqlConnection(connectionString);
+            
+            SqlConnection connection = new SqlConnection(this.connectionString);
             try
             {
                 connection.Open();
@@ -233,12 +234,7 @@ namespace Library
                     connection.Close();
                 }
 
-                // - - -
-                //***[ CLEAR PARAMS ]
-
                 sqlCommand.Parameters.Clear();
-
-                // - - - - -
 
                 connection.Open();
                 
@@ -247,6 +243,45 @@ namespace Library
                 sqlCommand.CommandText = "DELETE FROM Score WHERE ID = @id";
                 sqlCommand.Parameters.AddWithValue("@id", player.Id);
 
+                sqlCommand.ExecuteNonQuery();
+
+                if (connection.State == System.Data.ConnectionState.Open)
+                {
+                    connection.Close();
+                }
+
+            }
+            catch
+            {
+                action("Some unexpected exception happened.\nThe player won't be deleted from the Database.");
+            }
+            finally
+            {
+                if (connection.State == System.Data.ConnectionState.Open)
+                {
+                    connection.Close();
+                }
+            }
+        }
+
+        public void WriteMatchDown(Room room, DateTime dateTime)
+        {
+            
+            SqlConnection connection = new SqlConnection(this.connectionString);
+
+            try
+            {
+                connection.Open();
+
+                SqlCommand sqlCommand = new SqlCommand();
+
+                sqlCommand.CommandType = System.Data.CommandType.Text;
+                sqlCommand.Connection = connection;
+                sqlCommand.CommandText = "INSERT INTO Matches VALUES (@game, @gamelog, @date)";
+                
+                sqlCommand.Parameters.AddWithValue("@game", room.Name + " | Players: " + room.Players[0].Name + " - " + room.Players[1].Name + " | Date: " + dateTime);
+                sqlCommand.Parameters.AddWithValue("@gamelog", room.NewGame.Log);
+                sqlCommand.Parameters.AddWithValue("@date", dateTime);
                 sqlCommand.ExecuteNonQuery();
 
                 if (connection.State == System.Data.ConnectionState.Open)
@@ -266,6 +301,57 @@ namespace Library
                     connection.Close();
                 }
             }
+        }
+
+        public void LoadMatchesHistory(List<HistoryRoom> listOfRooms)
+        {
+            SqlConnection connection = new SqlConnection(this.connectionString);
+
+            try
+            {
+                connection.Open();
+
+                SqlCommand sqlCommand = new SqlCommand();
+
+                sqlCommand.CommandType = System.Data.CommandType.Text;
+                sqlCommand.CommandText = "select Matches.Game, Matches.GameLog, Matches.Date from Matches";
+                sqlCommand.Connection = connection;
+
+                SqlDataReader reader = sqlCommand.ExecuteReader();
+
+                while (reader.Read())
+                {
+                    string roomName = reader.GetString(0);
+                    string gameLog = reader.GetString(1);
+                    DateTime date = reader.GetDateTime(2);
+
+                    HistoryRoom newHistoryRoom = new HistoryRoom(roomName, gameLog, date);
+                    listOfRooms.Add(newHistoryRoom);
+                }
+
+            }
+            catch
+            {
+
+            }
+        }
+
+        public bool TestConnection()
+        {
+            bool connectionOk;
+
+            try
+            {
+                SqlConnection connection = new SqlConnection(this.connectionString);
+
+                connectionOk = true;
+                return connectionOk;
+            }
+            catch
+            {
+                connectionOk = false;
+                return connectionOk;
+            }            
         }
     }
 }

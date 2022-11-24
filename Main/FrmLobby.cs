@@ -10,36 +10,33 @@ namespace Main
 {
     public partial class FrmLobby : Form
     {
-        // * * * * * * * * * * * * * * * *
-                
+        #region Header
+
         List<FrmRoom> viewForms;
         Action<string> Warning = (string text) => MessageBox.Show(text);
         Task Initialize;
         bool createViewForms;
 
-        // * * * * * * * * * * * * * * * *
+        #endregion
 
         public FrmLobby()
         {
             InitializeComponent();
-
             viewForms = new List<FrmRoom>();
-
-            // * * * * *
-
+            
             Initialize = new Task(() =>
             {
                 GameMechanics.NotifyUpdate += SetInitialize;
 
                 GameMechanics.InitializeLists(Warning);
 
-                Invoke((MethodInvoker)(() => Btn_CreateRoom.Enabled = true));
-
+                Invoke((MethodInvoker)(() => btn_CreateRoom.Enabled = true));
+                
                 for (int i = 0; i < 1; i++)
                 {
                     try
                     {
-                        GameMechanics.AddTrucoRoom();
+                        GameMechanics.AddTrucoRoom(Warning);
                     }
                     catch (Exception exception)
                     {
@@ -60,12 +57,13 @@ namespace Main
                     }
                 }
                 createViewForms = false;
+                EnableAll();
             });
 
             Initialize.Start();
         }
 
-        // - - - - - - - - - - - - - - - -
+        
         private void FrmLobby_Load(object sender, EventArgs e)
         {
             try
@@ -79,7 +77,7 @@ namespace Main
             }
         }
 
-        // - - - - - - - - - - - - - - - - [ BUTTONS ]
+        #region Buttons
 
         private void Btn_EndGame_Click(object sender, EventArgs e)
         {
@@ -100,21 +98,107 @@ namespace Main
 
         }
 
-        // - - - - - - - - - - - - - - - - [ METHODS ]
+        private void btn_History_Click(object sender, EventArgs e)
+        {
+            FrmHistory frmHistory = new FrmHistory();
+            frmHistory.Show();
+        }
+
+        private void btn_NewPlayer_Click(object sender, EventArgs e)
+        {
+            string newPlayerName;
+            Player newPlayer;
+            DataAccess dataAccess = new DataAccess(GameMechanics.ConnectionString);
+
+            FrmNewPlayer frmNewPlayer = new FrmNewPlayer();
+
+            if (frmNewPlayer.ShowDialog() == DialogResult.OK)
+            {
+                newPlayerName = frmNewPlayer.NewPlayer;
+
+                newPlayer = new();
+                newPlayer.Name = newPlayerName;
+                newPlayer.GamesPlayed = 0;
+                newPlayer.GamesLost = 0;
+                newPlayer.GamesWon = 0;
+                newPlayer.GamesTied = 0;
+
+                GameMechanics.Players.Add(newPlayer);
+                DrawPlayersList();
+
+                if(dataAccess.TestConnection() == true)
+                {
+                    dataAccess.InsertPlayer(newPlayer, Warning);
+                }
+                else
+                {
+                    Warning("Unable to connect with the Database.\nThe player won't be written into it.");
+                }                
+            }
+        }
+
+        private void btn_DeletePlayer_Click(object sender, EventArgs e)
+        {
+            Player newPlayer;
+            DataAccess dataAccess = new DataAccess(GameMechanics.ConnectionString);
+
+            FrmDeletePlayer frmDeletePlayer = new FrmDeletePlayer();
+
+            if (frmDeletePlayer.ShowDialog() == DialogResult.OK)
+            {
+                newPlayer = frmDeletePlayer.PlayerToDelete;
+
+                if(dataAccess.TestConnection() == true)
+                {
+                    dataAccess.DeletePlayer(newPlayer, Warning);
+                    GameMechanics.Players.Remove(newPlayer);
+                }
+                else
+                {
+                    Warning("Unable to connect with the Database.\nThe player won't be deleted.");
+                }
+
+                DrawPlayersList();
+            }
+        }
+
+        private void btn_Statistics_Click(object sender, EventArgs e)
+        {
+            FrmStatistics statistics = new FrmStatistics();
+
+            statistics.Show();
+        }
+
+        private void Btn_CreateRoom_Click(object sender, EventArgs e)
+        {
+            FrmAddRoom frmAddRoom = new(Warning);
+            if (frmAddRoom.ShowDialog() == DialogResult.OK)
+            {
+                GameMechanics.Rooms.Add(frmAddRoom.NewRoom);
+                frmAddRoom.NewRoom.NewGame.NotifyEndGame += EndGameHandler;
+
+                //-----
+
+                CreateNewForm(frmAddRoom);
+
+                DrawTree();
+            }
+        }
+
+        #endregion
+
+        #region Methods
 
         private void SetInitialize()
         {
             createViewForms = true;
         }
-
-        // +++++++++ [ TREEVIEW ]
-
+                
         private void DrawTree()
         {
             if (createViewForms == true)
             {
-                CreateForms();
-                //createViewForms = false;
+                CreateForms();                
             }
 
             if (InvokeRequired)
@@ -129,9 +213,7 @@ namespace Main
                 DrawTreeMethod();
             }
         }
-
-        // = = = = = = = = =
-
+                
         private void DrawTreeMethod()
         {
             treeView1.Nodes.Clear();
@@ -169,9 +251,7 @@ namespace Main
                 label1.Text = "Open rooms: " + GameMechanics.Rooms.Count;
             }
         }
-
-        // = = = = = = = = =
-
+                
         private void TreeView_NodeMouseDoubleClick(object sender, TreeNodeMouseClickEventArgs e)
         {
             foreach (FrmRoom viewRoom in viewForms)
@@ -187,16 +267,12 @@ namespace Main
                 }
             }
         }
-
-        // = = = = = = = = =
-
+                
         private void TreeView_BeforeCollapse(object sender, TreeViewCancelEventArgs e)
         {
             e.Cancel = true;
         }
-
-        // = = = = = = = = =
-
+                
         private void TreeView_NodeMouseClick(object sender, TreeNodeMouseClickEventArgs e)
         {
             if (e.Node.Level == 1)
@@ -208,9 +284,7 @@ namespace Main
                 label2.Text = "";
             }
         }
-
-        // = = = = = = = = =
-
+                
         private void ListBox_MouseDoubleClick(object sender, MouseEventArgs e)
         {
             int index = listBox1.IndexFromPoint(e.Location);
@@ -219,9 +293,7 @@ namespace Main
                 MessageBox.Show(listBox1.SelectedItem.ToString());
             }
         }
-
-        // +++++++++ [ MISCELLANEOUS ]
-
+                
         private void CreateForms()
         {
             foreach (Room room in GameMechanics.Rooms)
@@ -234,9 +306,7 @@ namespace Main
                 viewForms.Add(newViewForm);
             }
         }
-
-        // = = = = = = = = =
-
+                
         private void DrawPlayersList()
         {
             listBox1.Items.Clear();
@@ -249,8 +319,7 @@ namespace Main
                 }
             }
         }
-
-        // = = = = = = = = =
+                
         private void EndGameHandler(object sender, EventArgs e)
         {
             foreach (FrmRoom frmRoom in viewForms)
@@ -264,9 +333,7 @@ namespace Main
                 }
             }
         }
-
-        // = = = = = = = = =
-
+                
         private void FormClose(FrmRoom form)
         {
             GameMechanics.Rooms.Remove(form.Room);
@@ -287,22 +354,6 @@ namespace Main
             DrawTree();
         }
 
-        private void Btn_CreateRoom_Click(object sender, EventArgs e)
-        {
-            FrmAddRoom frmAddRoom = new();
-            if (frmAddRoom.ShowDialog() == DialogResult.OK)
-            {
-                GameMechanics.Rooms.Add(frmAddRoom.NewRoom);
-                frmAddRoom.NewRoom.NewGame.NotifyEndGame += EndGameHandler;
-
-                //-----
-
-                CreateNewForm(frmAddRoom);
-
-                DrawTree();
-            }
-        }
-
         private void CreateNewForm(FrmAddRoom frmAddRoom)
         {
             FrmRoom frmRoom = new(frmAddRoom.NewRoom, DrawTree, this.FormClose);
@@ -313,54 +364,25 @@ namespace Main
             viewForms.Add(frmRoom);
         }
 
-        private void btn_NewPlayer_Click(object sender, EventArgs e)
+        private void EnableAll()
         {
-            string newPlayerName;
-            Player newPlayer;
-            DataAccess dataAccess = new DataAccess();
-
-            FrmNewPlayer frmNewPlayer = new FrmNewPlayer();
-
-            if(frmNewPlayer.ShowDialog() == DialogResult.OK)
+            if (btn_CreateRoom.InvokeRequired)
             {
-                newPlayerName = frmNewPlayer.NewPlayer;
-
-                newPlayer = new();
-                newPlayer.Name = newPlayerName;
-                newPlayer.GamesPlayed = 0;
-                newPlayer.GamesLost = 0;
-                newPlayer.GamesWon = 0;
-                newPlayer.GamesTied = 0;
-
-                GameMechanics.Players.Add(newPlayer);
-                DrawPlayersList();
-
-                dataAccess.InsertPlayer(newPlayer);
+                Invoke(new MethodInvoker(delegate
+                {
+                    btn_DeletePlayer.Enabled = true;
+                    btn_NewPlayer.Enabled = true;
+                    btn_Statistics.Enabled = true;
+                    btn_CreateRoom.Enabled = true;
+                    btn_EndGame.Enabled = true;
+                    btn_History.Enabled = true;
+                }));
             }
         }
 
-        private void btn_DeletePlayer_Click(object sender, EventArgs e)
-        {
-            Player newPlayer;
-            DataAccess dataAccess = new DataAccess();
 
-            FrmDeletePlayer frmDeletePlayer = new FrmDeletePlayer();
+        #endregion
 
-            if(frmDeletePlayer.ShowDialog() == DialogResult.OK)
-            {
-                newPlayer = frmDeletePlayer.PlayerToDelete;
-                dataAccess.DeletePlayer(newPlayer);
-                GameMechanics.Players.Remove(newPlayer);
 
-                DrawPlayersList();
-            }
-        }
-
-        private void btn_Statistics_Click(object sender, EventArgs e)
-        {
-            FrmStatistics statistics = new FrmStatistics();
-
-            statistics.Show();
-        }
     }
 }

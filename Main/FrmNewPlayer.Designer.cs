@@ -33,6 +33,7 @@
             this.Btn_Cancel = new System.Windows.Forms.Button();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
             this.textBox1 = new System.Windows.Forms.TextBox();
+            this.label1 = new System.Windows.Forms.Label();
             this.groupBox2.SuspendLayout();
             this.groupBox1.SuspendLayout();
             this.SuspendLayout();
@@ -86,8 +87,23 @@
             this.textBox1.Font = new System.Drawing.Font("Century Gothic", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
             this.textBox1.Location = new System.Drawing.Point(6, 22);
             this.textBox1.Name = "textBox1";
+            this.textBox1.PlaceholderText = "Name";
             this.textBox1.Size = new System.Drawing.Size(454, 27);
             this.textBox1.TabIndex = 0;
+            this.textBox1.TextChanged += new System.EventHandler(this.textBox1_TextChanged);
+            // 
+            // label1
+            // 
+            this.label1.AutoSize = true;
+            this.label1.BackColor = System.Drawing.Color.Silver;
+            this.label1.Font = new System.Drawing.Font("Century Gothic", 9.75F, System.Drawing.FontStyle.Italic, System.Drawing.GraphicsUnit.Point);
+            this.label1.ForeColor = System.Drawing.Color.Red;
+            this.label1.Location = new System.Drawing.Point(12, 79);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(46, 16);
+            this.label1.TabIndex = 5;
+            this.label1.Text = "label1";
+            this.label1.Visible = false;
             // 
             // FrmNewPlayer
             // 
@@ -95,6 +111,7 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackgroundImage = global::Main.Properties.Resources.teal_fabric_texture_600x400;
             this.ClientSize = new System.Drawing.Size(490, 152);
+            this.Controls.Add(this.label1);
             this.Controls.Add(this.groupBox1);
             this.Controls.Add(this.groupBox2);
             this.Name = "FrmNewPlayer";
@@ -104,6 +121,7 @@
             this.groupBox1.ResumeLayout(false);
             this.groupBox1.PerformLayout();
             this.ResumeLayout(false);
+            this.PerformLayout();
 
         }
 
@@ -114,5 +132,6 @@
         private System.Windows.Forms.Button Btn_Cancel;
         private System.Windows.Forms.GroupBox groupBox1;
         private System.Windows.Forms.TextBox textBox1;
+        private System.Windows.Forms.Label label1;
     }
 }

@@ -44,9 +44,9 @@ namespace Library
 
                 File.WriteAllText(path + ".json", json);                                
             }
-            catch (Exception)
-            {
-                throw new Exception("File inexistent.");
+            catch (Exception e)
+            {                                
+                throw new Exception(e.Message, e);
             }            
         }
     }

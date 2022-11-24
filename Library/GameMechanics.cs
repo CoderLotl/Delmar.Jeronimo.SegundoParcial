@@ -9,10 +9,12 @@ namespace Library
         private static List<Player> players;
         private static List<Room> rooms;
         private static int id;
+        private static string connectionString;
 
         public static List<Player> Players { get => players; set => players = value; }
         public static List<Room> Rooms { get => rooms; set => rooms = value; }
         public static int ID { get => id; set => id = value; }
+        public static string ConnectionString { get => connectionString; }
 
         public delegate void Notify();
 
@@ -21,20 +23,29 @@ namespace Library
         static GameMechanics()
         {
             ID = 0;
+            rooms = new List<Room>();
+            players = new List<Player>();
+            connectionString = "Server=ARIS-PC\\SERVIDORPARCIAL;Database=Parcial;Trusted_Connection=True;TrustServerCertificate=True";
         }
 
         public static void InitializeLists(Action<string> warning)
         {
-            DataAccess newConnection = new DataAccess();
-
-            newConnection.GetPlayers(warning, "Server=ARIS-PC\\SERVIDORPARCIAL;Database=Parcial;Trusted_Connection=True;TrustServerCertificate=True");
-
-            rooms = new List<Room>();
+            DataAccess newConnection = new DataAccess(ConnectionString);
+            
+            if(newConnection.TestConnection() == true)
+            {
+                newConnection.GetPlayers(warning);
+            }
+            else
+            {
+                warning("Unable to connect with Database.\nLoading mock bots...");
+                newConnection.LoadMockBots(players);
+            }
 
             NotifyUpdate();
         }
 
-        public static void AddTrucoRoom()
+        public static void AddTrucoRoom(Action<string> action)
         {
             Random randomNumber = new Random();
             Player player1;
@@ -45,17 +56,14 @@ namespace Library
             player1 = players[randomNumber.Next(players.Count)];
 
             player2 = ObtainPlayer2(player1);            
-
-            //player2 = players[1];
-
+            
             string roomName = "Room #" + (GameMechanics.ID + 1).ToString();
 
-            Room newRoom = new Room(roomName, player1, player2, GameType.Cards, GameSubType.Truco);
+            Room newRoom = new Room(roomName, player1, player2, GameType.Cards, GameSubType.Truco, action);
 
             rooms.Add(newRoom);
 
             GameMechanics.ID++;
-
         }
 
         private static Player ObtainPlayer2(Player player1)
@@ -83,20 +91,6 @@ namespace Library
             {
                 throw new ArgumentNullException("The rooms list has not been initialized correctly.");
             }
-        }
-
-        public static void AddTrucoRoom(Player player1, Player player2)
-        {
-            string roomName = "Room #" + (rooms.Count + 1).ToString();
-
-            Room newRoom = new Room(roomName, player1, player2, GameType.Cards, GameSubType.Truco);
-
-            rooms.Add(newRoom);
-        }
-
-        public static void RemoveTrucoRoom(int index, Action DrawTree)
-        {
-
         }
 
         public static void RemoveTrucoRoom(Room room, Action DrawTree)

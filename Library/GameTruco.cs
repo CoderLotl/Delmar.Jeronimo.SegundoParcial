@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace Library
 {
-    public enum Suit // CARD'S SUITS
+    public enum Suit
     {
         Cups,
         Golds,
@@ -19,20 +19,14 @@ namespace Library
 
     public class GameTruco : Game, ICardGame
     {
-        // ********************* ☽
-
         public override event EventHandler NotifyLogUpdate;
         public override event EventHandler NotifyEndGame;
-
-        // ********************* ☽
 
         public List<Card> Deck { get; set; }
         public List<Card> HandPlayerOne { get; set; }
         public List<Card> HandPlayerTwo { get; set; }
         public List<Card> PlayedPlayerOne { get; set; }
-        public List<Card> PlayedPlayerTwo { get; set; }
-
-        // ********************* ✩
+        public List<Card> PlayedPlayerTwo { get; set; }        
 
         public GameTruco()
         {            
@@ -47,12 +41,10 @@ namespace Library
             this.PlayedPlayerTwo = new List<Card>();
             this.CancelToken = new CancellationTokenSource();
             this.Turn = 0;
-            this.Match = 0;
+            this.Match = 0;            
         }
 
-        // ********************* ✩
 
-        // --------------------------
 
         public List<Card> GenerateDeck()
         {
@@ -90,7 +82,7 @@ namespace Library
             return newDeck;
         }
 
-        // --------------------------
+        
 
         public List<Card> ShuffleDeck(List<Card> deck)
         {
@@ -117,7 +109,7 @@ namespace Library
             }
         }
 
-        // --------------------------
+        
 
         private static int CalculateRelativeValue(int rank, Suit suit)
         {
@@ -169,7 +161,7 @@ namespace Library
             return relativeValue;
         }
 
-        // --------------------------
+        
 
         public void DrawCard(List<Card> playerCards, List<Card> deck)
         {
@@ -178,9 +170,13 @@ namespace Library
                 playerCards.Add(deck[0]);
                 deck.Remove(deck[0]);
             }
+            else
+            {
+                throw new ArgumentNullException();
+            }
         }
 
-        // --------------------------
+        
 
         public void GiveCards(List<Card> deck, List<Card> playerCards)
         {            
@@ -194,7 +190,7 @@ namespace Library
             }
         }
 
-        // --------------------------
+        
 
         public void PlayCard(Player player, List<Card> hand, List<Card> tableStack)
         {
@@ -209,7 +205,7 @@ namespace Library
             Thread.Sleep(1000);
         }
 
-        // --------------------------
+        
 
         public override void EndRound()
         {
@@ -224,7 +220,7 @@ namespace Library
             this.HandPlayerTwo.Clear();            
         }
 
-        // --------------------------
+        
 
         public override void EndGame()
         {
@@ -233,19 +229,17 @@ namespace Library
             NotifyLogUpdate?.Invoke(this, EventArgs.Empty);            
         }
 
-        // --------------------------
+        
 
         public override void Play(Player player1, Player player2)
         {
             Player playerOne;
             Player playerTwo;
-
-            // --- START
-
+            
             while(this.Turn < 4 && this.CancelToken.IsCancellationRequested != true)
             {
                 ChoosePlayerOne(player1, player2, out playerOne, out playerTwo);
-                this.Turn++; //+1 TO THE TURNS
+                this.Turn++;
                 PlayRound(playerOne, playerTwo);
                 Thread.Sleep(2000);                
             }
@@ -295,17 +289,24 @@ namespace Library
             }
         }
 
-        // --------------------------
+        
 
         private void UpdatePlayersStats(Player player1, Player player2)
         {
-            DataAccess dataAccess = new DataAccess();
+            DataAccess dataAccess = new DataAccess(GameMechanics.ConnectionString);
 
-            dataAccess.UpdatePlayer(player1);
-            dataAccess.UpdatePlayer(player2);
+            if(dataAccess.TestConnection() == true)
+            {
+                dataAccess.UpdatePlayer(player1);
+                dataAccess.UpdatePlayer(player2);
+            }
+            else
+            {
+                Action("Unable to connect to the Database.\nThe players won't be updated.");
+            }
         }
 
-        // --------------------------
+        
 
         private void ChoosePlayerOne(Player player1, Player player2, out Player playerOne, out Player playerTwo)
         {
@@ -324,7 +325,7 @@ namespace Library
             }
         }
 
-        // --------------------------
+        
 
         private void Announce(string text)
         {
@@ -333,37 +334,26 @@ namespace Library
             this.Log += @"{\rtf1\ansi" + CleanLog+ @"}";
         }
 
-        // ----------------------------------------------------
-        // -------------------------- [ GAME LOGIC ]
-        //----------------------------------------------------
-
-
-        //----------------------------------------------------
+        
 
         private void PlayRound(Player player1, Player player2)
         {
             bool winnerRound = false;
             Player isHand = player1;
-            Player lastToPlay = player2; // I NEED TO SET THE PLAYER 2 AS THE LAST TO PLAY TO PREVENT THE PLAYER 2 PLAYING A CARD AFTER ANSWERING IN THE 1ST HAND.
+            Player lastToPlay = player2;
             bool checkIsNeeded = false;
             bool envidoCalled = false;
-            int envidoWanted = 0; // 0 = NOT ANSWERED YET, 1 = WANTED, 2 = NOT WANTED.
+            int envidoWanted = 0;
             bool trucoCalled = false;
             int trucoWanted = 0;
             int player1EnvidoPoints = 0;
             int player2EnvidoPoints = 0;
             int player1HandScore = 0;
             int player2HandScore = 0;
-
-
-            // * * * * * * * * * * * * * *
+                                    
 
             AnnounceRoundPreamble(player1, player2);
-
-            // -----------------------------------------------------
-            // ------------------------- [ GAME STARTS ] * * * * * *
-            // -----------------------------------------------------
-
+            
 
             while (winnerRound == false && this.CancelToken.IsCancellationRequested != true)
             {
@@ -404,7 +394,7 @@ namespace Library
                 }                                
             }
 
-            EndRound(); // ALL CARTS RETURN TO THE DECK
+            EndRound();
             Announce(@"----------------------------------------------------------- \line");
         }
 
@@ -442,7 +432,7 @@ namespace Library
             Thread.Sleep(2000);
         }
 
-        // --------------------------
+        
 
         private void CheckThisHandWinner(Player player1, Player player2, ref Player lastToPlay, ref Player isHand, ref bool checkIsNeeded,
             ref int player1HandScore, ref int player2HandScore, ref bool winnerRound, int trucoWanted)
@@ -452,7 +442,7 @@ namespace Library
 
             if(PlayedPlayerOne.Count > 0 && PlayedPlayerTwo.Count > 0)
             {
-                card1 = PlayedPlayerOne[PlayedPlayerOne.Count - 1]; // FIND LAST CARD PLAYED.
+                card1 = PlayedPlayerOne[PlayedPlayerOne.Count - 1];
                 card2 = PlayedPlayerTwo[PlayedPlayerTwo.Count - 1];
 
                 if(card1.RelativeRank > card2.RelativeRank)
@@ -501,7 +491,7 @@ namespace Library
                     }
                 }                
 
-                // - - - -
+                
 
                 if(player1HandScore >= 2 || player2HandScore >= 2)
                 {
@@ -549,7 +539,7 @@ namespace Library
             }
         }
 
-        // --------------------------
+        
 
         private void PlayTurnOfPlayer(Player player1, Player player2, ref Player lastToPlay, Player isHand, int playerOrder, List<Card> tableStack,
             ref bool envidoCalled, ref int envidoWanted, ref bool trucoCalled, ref int trucoWanted, ref int player1EnvidoPoints,
@@ -572,21 +562,21 @@ namespace Library
                 currentPlayerHand = HandPlayerTwo;
             }
 
-            // - - -
+            
 
-            if(envidoCalled == false || (envidoCalled == true && envidoWanted == 0)) // CHECK FOR ENVIDO
+            if(envidoCalled == false || (envidoCalled == true && envidoWanted == 0))
             {
                 CheckForEnvido(player1, player2, ref envidoCalled, ref envidoWanted, trucoCalled,
                 ref player1EnvidoPoints, ref player2EnvidoPoints, currentPlayer, oponent, ref checkIsNeeded, isHand);
             }
-            else // CHECK FOR TRUCO
+            else
             {
                 CheckForTruco(player1, player2, ref trucoCalled, ref trucoWanted, currentPlayer, oponent, ref winnerRound, ref checkIsNeeded);
             }
 
-            // - - -
+            
 
-            if(lastToPlay != currentPlayer) // PLAY A CARD
+            if(lastToPlay != currentPlayer)
             {
                 if ((trucoCalled == false || (trucoCalled == true && trucoWanted != 0)) && (envidoCalled == false || (envidoCalled == true && envidoWanted != 0)))
                 {                    
@@ -598,7 +588,7 @@ namespace Library
 
         }
 
-        // --------------------------
+        
 
         private void CheckForTruco(Player player1, Player player2, ref bool trucoCalled, ref int trucoWanted, Player currentPlayer, Player oponent,
             ref bool winnerRound, ref bool checkIsNeeded)
@@ -606,19 +596,19 @@ namespace Library
             Random randomNum = new Random();
             int callingChance = randomNum.Next(100);
 
-            if (trucoCalled == false && callingChance >= 50) // IF TRUCO HASN'T BEEN CALLED YET... THERE'S A CHANCE FOR THIS PLAYER TO CALL IT.
+            if (trucoCalled == false && callingChance >= 50)
             {
                 Call(currentPlayer, oponent, 2, ref trucoCalled, ref trucoWanted);
             }
-            else if( trucoCalled == true & trucoWanted == 0) // IF THE PREVIOUS PLAYER CALLED TRUCO, INSTEAD... 
+            else if( trucoCalled == true & trucoWanted == 0)
             {
                 if( callingChance >= 50)
                 {
-                    Call(currentPlayer, oponent, 3, ref trucoCalled, ref trucoWanted); // THIS ONE CAN ACCEPT
+                    Call(currentPlayer, oponent, 3, ref trucoCalled, ref trucoWanted);
                 }
                 else
                 {
-                    Call(currentPlayer, oponent, 4, ref trucoCalled, ref trucoWanted); // OR DECLINE DECLINE
+                    Call(currentPlayer, oponent, 4, ref trucoCalled, ref trucoWanted);
                     if (currentPlayer == player1)
                     {
                         this.PlayerTwoScore++;
@@ -636,19 +626,19 @@ namespace Library
             }
         }
 
-        // --------------------------
+        
 
         private void CheckForEnvido(Player player1, Player player2, ref bool envidoCalled, ref int envidoWanted, bool trucoCalled,
             ref int player1EnvidoPoints, ref int player2EnvidoPoints, Player currentPlayer, Player oponent, ref bool checkIsNeeded, Player isHand)
         {
-            if (trucoCalled == false) // IF TRUCO HASN'T BEEN CALLED YET...
+            if (trucoCalled == false)
             {
                 Random randomNum = new Random();
                 int callingChance = randomNum.Next(100);
 
-                if (envidoCalled == false) // .. AND ENVIDO HASN'T BEEN CALLED NEITHER...
+                if (envidoCalled == false)
                 {
-                    if (callingChance >= 50) // ... THERE'S A CHANCE FOR THIS PLAYER TO CALL ENVIDO.
+                    if (callingChance >= 50)
                     {
                         Call(currentPlayer, oponent, 1, ref envidoCalled, ref envidoWanted);
                         if (currentPlayer == player1)
@@ -662,11 +652,11 @@ namespace Library
                         checkIsNeeded = false;
                     }
                 }
-                else if (envidoCalled == true && envidoWanted == 0) // ... ELSE IF ENVIDO HAS BEEN CALLED BUT NOT ANSWERED...
+                else if (envidoCalled == true && envidoWanted == 0)
                 {
                     if (callingChance >= 50)
                     {
-                        Call(currentPlayer, oponent, 3, ref envidoCalled, ref envidoWanted); // THIS PLAYER CAN ACCEPT...
+                        Call(currentPlayer, oponent, 3, ref envidoCalled, ref envidoWanted);
                         if (currentPlayer == player1)
                         {
                             player1EnvidoPoints = CalculateEnvidoPoints(HandPlayerOne);
@@ -680,7 +670,7 @@ namespace Library
                     }
                     else
                     {
-                        Call(currentPlayer, oponent, 4, ref envidoCalled, ref envidoWanted); // OR DECLINE.
+                        Call(currentPlayer, oponent, 4, ref envidoCalled, ref envidoWanted);
                         if (currentPlayer == player1)
                         {
                             this.PlayerTwoScore++;
@@ -695,7 +685,7 @@ namespace Library
             }
         }
 
-        // --------------------------
+        
 
         private void ResolveEnvido(Player player1, Player player2, int player1EnvidoPoints, int player2EnvidoPoints, Player isHand)
         {
@@ -748,7 +738,7 @@ namespace Library
             }
         }
 
-        // --------------------------
+        
 
         private int CalculateEnvidoPoints(List<Card> hand)
         {
@@ -826,7 +816,7 @@ namespace Library
             return points;
         }
 
-        // --------------------------
+        
 
         private void Call(Player currentPlayer, Player oponent, int option, ref bool call, ref int wanted)
         {
@@ -861,6 +851,5 @@ namespace Library
                     break;
             }
         }
-
     }
 }

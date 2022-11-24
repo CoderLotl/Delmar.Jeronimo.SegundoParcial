@@ -28,8 +28,22 @@ namespace Main
 
         private void Btn_Accept_Click(object sender, EventArgs e)
         {
-            newPlayer = textBox1.Text;
-            this.DialogResult = DialogResult.OK;
+            if( !string.IsNullOrWhiteSpace( textBox1.Text ) )
+            {
+                newPlayer = textBox1.Text;
+                this.DialogResult = DialogResult.OK;
+            }
+            else
+            {
+                label1.Visible = true;
+                label1.Text = "The Name field can't be empty.";
+            }
+            
+        }
+
+        private void textBox1_TextChanged(object sender, EventArgs e)
+        {
+            label1.Visible = false;
         }
     }
 }
