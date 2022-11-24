@@ -2,7 +2,6 @@
 using System;
 using System.Collections.Generic;
 using System.Drawing;
-using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
@@ -23,7 +22,7 @@ namespace Main
         {
             InitializeComponent();
             viewForms = new List<FrmRoom>();
-            
+
             Initialize = new Task(() =>
             {
                 GameMechanics.NotifyUpdate += SetInitialize;
@@ -31,7 +30,7 @@ namespace Main
                 GameMechanics.InitializeLists(Warning);
 
                 Invoke((MethodInvoker)(() => btn_CreateRoom.Enabled = true));
-                
+
                 for (int i = 0; i < 1; i++)
                 {
                     try
@@ -63,18 +62,11 @@ namespace Main
             Initialize.Start();
         }
 
-        
+
         private void FrmLobby_Load(object sender, EventArgs e)
         {
-            try
-            {
-                DrawTree();
-                DrawPlayersList();
-            }
-            catch
-            {
-
-            }
+            DrawTree();
+            DrawPlayersList();
         }
 
         #region Buttons
@@ -83,7 +75,7 @@ namespace Main
         {
             if (treeView1.SelectedNode != null)
             {
-                if(treeView1.SelectedNode.Level == 1)
+                if (treeView1.SelectedNode.Level == 1)
                 {
                     foreach (FrmRoom frmRoom in viewForms)
                     {
@@ -95,7 +87,6 @@ namespace Main
                     }
                 }
             }
-
         }
 
         private void btn_History_Click(object sender, EventArgs e)
@@ -126,14 +117,14 @@ namespace Main
                 GameMechanics.Players.Add(newPlayer);
                 DrawPlayersList();
 
-                if(dataAccess.TestConnection() == true)
+                if (dataAccess.TestConnection() == true)
                 {
                     dataAccess.InsertPlayer(newPlayer, Warning);
                 }
                 else
                 {
                     Warning("Unable to connect with the Database.\nThe player won't be written into it.");
-                }                
+                }
             }
         }
 
@@ -148,17 +139,24 @@ namespace Main
             {
                 newPlayer = frmDeletePlayer.PlayerToDelete;
 
-                if(dataAccess.TestConnection() == true)
+                if(CheckIfPlayerIsPlaying(newPlayer) == false)
                 {
-                    dataAccess.DeletePlayer(newPlayer, Warning);
-                    GameMechanics.Players.Remove(newPlayer);
+                    if (dataAccess.TestConnection() == true)
+                    {
+                        dataAccess.DeletePlayer(newPlayer, Warning);
+                        GameMechanics.Players.Remove(newPlayer);
+                    }
+                    else
+                    {
+                        Warning("Unable to connect with the Database.\nThe player won't be deleted.");
+                    }
+
+                    DrawPlayersList();
                 }
                 else
                 {
-                    Warning("Unable to connect with the Database.\nThe player won't be deleted.");
+                    Warning("You can't delete a player that's still playing.");
                 }
-
-                DrawPlayersList();
             }
         }
 
@@ -193,12 +191,12 @@ namespace Main
         {
             createViewForms = true;
         }
-                
+
         private void DrawTree()
         {
             if (createViewForms == true)
             {
-                CreateForms();                
+                CreateForms();
             }
 
             if (InvokeRequired)
@@ -213,7 +211,7 @@ namespace Main
                 DrawTreeMethod();
             }
         }
-                
+
         private void DrawTreeMethod()
         {
             treeView1.Nodes.Clear();
@@ -251,7 +249,7 @@ namespace Main
                 label1.Text = "Open rooms: " + GameMechanics.Rooms.Count;
             }
         }
-                
+
         private void TreeView_NodeMouseDoubleClick(object sender, TreeNodeMouseClickEventArgs e)
         {
             foreach (FrmRoom viewRoom in viewForms)
@@ -267,12 +265,12 @@ namespace Main
                 }
             }
         }
-                
+
         private void TreeView_BeforeCollapse(object sender, TreeViewCancelEventArgs e)
         {
             e.Cancel = true;
         }
-                
+
         private void TreeView_NodeMouseClick(object sender, TreeNodeMouseClickEventArgs e)
         {
             if (e.Node.Level == 1)
@@ -284,7 +282,7 @@ namespace Main
                 label2.Text = "";
             }
         }
-                
+
         private void ListBox_MouseDoubleClick(object sender, MouseEventArgs e)
         {
             int index = listBox1.IndexFromPoint(e.Location);
@@ -293,7 +291,7 @@ namespace Main
                 MessageBox.Show(listBox1.SelectedItem.ToString());
             }
         }
-                
+
         private void CreateForms()
         {
             foreach (Room room in GameMechanics.Rooms)
@@ -306,7 +304,7 @@ namespace Main
                 viewForms.Add(newViewForm);
             }
         }
-                
+
         private void DrawPlayersList()
         {
             listBox1.Items.Clear();
@@ -319,7 +317,7 @@ namespace Main
                 }
             }
         }
-                
+
         private void EndGameHandler(object sender, EventArgs e)
         {
             foreach (FrmRoom frmRoom in viewForms)
@@ -333,7 +331,7 @@ namespace Main
                 }
             }
         }
-                
+
         private void FormClose(FrmRoom form)
         {
             GameMechanics.Rooms.Remove(form.Room);
@@ -380,6 +378,24 @@ namespace Main
             }
         }
 
+        private bool CheckIfPlayerIsPlaying(Player player)
+        {
+            bool playerIsPlaying = false;
+
+            foreach(Room room in GameMechanics.Rooms)
+            {
+                foreach(Player playerInRoom in room.Players)
+                {
+                    if(player == playerInRoom)
+                    {
+                        playerIsPlaying = true;
+                        break;
+                    }
+                }
+            }
+
+            return playerIsPlaying;
+        }
 
         #endregion
 

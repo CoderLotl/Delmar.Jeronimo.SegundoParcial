@@ -12,16 +12,27 @@ namespace Library
     {
         string connectionString;
 
+        /// <summary>
+        /// CONSTRUCTOR. SETS THE CONNECTION STRING TO THE VALUE PASSED IN THE CREATION OF THE DATA ACCESS OBJECT.
+        /// ---
+        /// CONSTRUCTOR. SETEA EL STRING DE LA CONEXION AL VALOR PASADO EN LA CREACION DEL OBJETO DATA ACCESS.
+        /// </summary>
+        /// <param name="connectionString"></param>
         public DataAccess(string connectionString)
         {
             this.connectionString = connectionString;
         }
 
         /// <summary>
-        /// THIS METHOD TRIES TO CONNECT TO THE DATABASE AND RETRIEVES A LIST OF PLAYERS, WHICH IS LATER SET
+        /// TRIES TO CONNECT TO THE DATABASE AND RETRIEVES A LIST OF PLAYERS, WHICH IS LATER SET
         /// IN THE STATIC LIST OF PLAYER.
         /// MAY THE CONNECTION BE SUCCESSFUL BUT ANY OTHER EXCEPTION OCCUR, THE METHOD WILL LOAD A LIST OF MOCK
         /// PLAYERS TO THE GAME AND EXECUTE THE WARNING METHOD PASSED BY THE DELEGATE.
+        /// ---
+        /// INTENTA CONECTARSE A LA BASE DE DATOS Y RETORNA UNA LISTA DE JUGADORES, LA CUAL LUEGO SE SETEA
+        /// EN LA LISTA ESTATICA DE JUGADORES.
+        /// EN EL CASO DE QUE LA CONEXION SEA EXITOSA PERO ALGUN OTRO PROBLEMA OCURRA, EL METODO CARGARA UNA LISTA DE
+        /// JUGADORES MOCK AL JUEGO Y EJECUTARA EL METODO DE ADVERTENCIA PASADO POR EL DELEGADO.
         /// </summary>
         /// <param name="action"></param>
         public void GetPlayers(Action<string> action)
@@ -76,6 +87,8 @@ namespace Library
 
         /// <summary>
         /// THIS METHOD LOADS A LIST OF MOCK PLAYERS.
+        /// ---
+        /// ESTE METODO CARGA UNA LISTA DE JUGADORES MOCK.
         /// </summary>
         /// <param name="playerList"></param>
         public void LoadMockBots(List<Player> playerList)
@@ -92,7 +105,9 @@ namespace Library
         }
 
         /// <summary>
-        /// 
+        /// INSERTS A PLAYER IN THE PLAYERS TABLE IN THE DATA BASE AND CREATES AN ENTRY FOR SAID PLAYER IN THE SCORE TABLE.
+        /// ---
+        /// INSERTA UN JUGADORE EN LA TABLA DE JUGADORES DE LA BASE DE DATOS Y CREA UNA ENTRADA PARA DICHO JUGADOR EN LA TABLA DE PUNTAJES.
         /// </summary>
         /// <param name="player"></param>
         public void InsertPlayer(Player player, Action<string> action)
@@ -172,6 +187,12 @@ namespace Library
 
         }
 
+        /// <summary>
+        /// UPDATES THE STATISTICS OF A SINGLE GIVEN PLAYER AT THE SCORE TABLE IN THE DATA BASE.
+        /// ---
+        /// ACTUALIZA LAS ESTADISTICAS DE UN JUGADOR DADO EN LA TABLA DE PUNTAJES DE LA BASE DE DATOS.
+        /// </summary>
+        /// <param name="player"></param>
         public void UpdatePlayer(Player player)
         {            
             SqlConnection connection = new SqlConnection(this.connectionString);
@@ -212,6 +233,13 @@ namespace Library
 
         }
 
+        /// <summary>
+        /// DELETES A PLAYER AND THEIR DATA FROM THE DATA BASE.
+        /// ---
+        /// BORRA UN JUGADOR Y SUS DATOS DE LA BASE DE DATOS.
+        /// </summary>
+        /// <param name="player"></param>
+        /// <param name="action"></param>
         public void DeletePlayer(Player player, Action<string> action)
         {
             
@@ -264,6 +292,13 @@ namespace Library
             }
         }
 
+        /// <summary>
+        /// SAVES THE LOG OF A MATCH WITH ITS DATETIME VALUE OF THE GAME'S END IN THE DATABASE.
+        /// ---
+        /// GUARDA EL LOG DE UNA PARTIDA CON SU VALOR DE FECHA-HORA DEL FINAL DE LA PARTIDA EN LA BASE DE DATOS.
+        /// </summary>
+        /// <param name="room"></param>
+        /// <param name="dateTime"></param>
         public void WriteMatchDown(Room room, DateTime dateTime)
         {
             
@@ -303,6 +338,14 @@ namespace Library
             }
         }
 
+        /// <summary>
+        /// LOADS THE WHOLE DATA OF THE MATCHES TABLE OF THE DATA BASE, PROVIDING THE USER WITH ALL THE DATA OF THE PREVIOUS MATCHES
+        /// PLAYED.
+        /// ---
+        /// CARGA TODOS LOS DATOS DE LA TABLA DE PARTIDAS DE LA BASE DE DATOS, PROVEYENDO AL USUARIO CON TODOS LOS DATOS DE LAS PARTIDAS
+        /// PREVIAMENTE JUGADAS.
+        /// </summary>
+        /// <param name="listOfRooms"></param>
         public void LoadMatchesHistory(List<HistoryRoom> listOfRooms)
         {
             SqlConnection connection = new SqlConnection(this.connectionString);
@@ -336,6 +379,14 @@ namespace Library
             }
         }
 
+        /// <summary>
+        /// TESTS THE CONNECTION TO THE DATA BASE USING THE STRING CONNECTION PARAMETER.
+        /// RETURNS TRUE IF THE DATA BASE CAN BE REACHED, OR FALSE IF IT CANNOT.
+        /// ---
+        /// PRUEBA LA CONEXION A LA BASE DE DATOS USANDO EL PARAMETRO DE STRING CONNECTION.
+        /// RETORNA TRUE SI SE PUEDE ALCANZAR LA BASE DE DATOS, O FALSE SI NO SE PUEDE.
+        /// </summary>
+        /// <returns></returns>
         public bool TestConnection()
         {
             bool connectionOk;

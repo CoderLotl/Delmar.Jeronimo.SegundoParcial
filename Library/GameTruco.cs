@@ -317,9 +317,9 @@ namespace Library
 
 
         /// <summary>
-        /// DECIDES THE WINNER BASED ON THEIR SCORE AND ADDS THE CORRESPONDING POINTS TO THEIR COUNTERS.
+        /// DECIDES THE WINNER BASED ON THEIR SCORE AND ADDS THE CORRESPONDING POINTS TO THEIR COUNTERS, THEN ANNOUNCED THE WINNER.
         /// ---
-        /// DECIDE EL GANADOR BASADO EN SU PUNTAJE Y AGREGA LOS PUNTOS CORRESPONDIENTES A SUS CONTADORES.
+        /// DECIDE EL GANADOR BASADO EN SU PUNTAJE Y AGREGA LOS PUNTOS CORRESPONDIENTES A SUS CONTADORES, LUEGO ANUNCIA EL GANADOR.
         /// </summary>
         /// <param name="player1"></param>
         /// <param name="player2"></param>
@@ -328,10 +328,13 @@ namespace Library
             player1.GamesPlayed++;
             player2.GamesPlayed++;
 
+            Announce(@" \b " + player1.Name + @" \b0 score is: " + PlayerOneScore.ToString() + @" \line" +
+                     @" \b " + player2.Name + @" \b0 score is: " + PlayerTwoScore.ToString() + @" \line");
+
             if(PlayerOneScore > PlayerTwoScore)
             {                
                 player1.GamesWon++;
-                player2.GamesLost++;
+                player2.GamesLost++;                
                 Announce(@" \b " + player1.Name + @" is the Winner!\b0\line");
                 NotifyLogUpdate?.Invoke(this, EventArgs.Empty);
                 Thread.Sleep(2000);
@@ -700,9 +703,7 @@ namespace Library
             else
             {
                 CheckForTruco(player1, player2, ref trucoCalled, ref trucoWanted, currentPlayer, oponent, ref winnerRound, ref checkIsNeeded);
-            }
-
-            
+            }            
 
             if(lastToPlay != currentPlayer)
             {
@@ -717,7 +718,21 @@ namespace Library
         }
 
         
-
+        /// <summary>
+        /// CHECKS IF TRUCO HAS BEEN CALLED PREVIOUSLY OR NOT. BASED ON THAT, DECIDES TO CALL TRUCO OR HOW TO ANSWER TO A PREVIOUS TRUCO
+        /// CALL. FINALLY MAKES THE CALL AND SETS THE BOOLEAN VARIABLES TO THEIR CORRESPONDING VALUES.
+        /// ---
+        /// CHEQUEA SI EL TRUCO YA HA SIDO CANTADO PREVIAMENTE O NO. BASADO EN ESO, DECIDE CANTAR TRUCO O COMO RESPONDER A UNA LLAMADA PREVIA
+        /// DE TRUCO. FINALMENTE HACE EL LLAMADO Y SETEA LAS VARIABLES BOOLEANAS A SUS CORRESPONDIENTES VALORES.
+        /// </summary>
+        /// <param name="player1"></param>
+        /// <param name="player2"></param>
+        /// <param name="trucoCalled"></param>
+        /// <param name="trucoWanted"></param>
+        /// <param name="currentPlayer"></param>
+        /// <param name="oponent"></param>
+        /// <param name="winnerRound"></param>
+        /// <param name="checkIsNeeded"></param>
         private void CheckForTruco(Player player1, Player player2, ref bool trucoCalled, ref int trucoWanted, Player currentPlayer, Player oponent,
             ref bool winnerRound, ref bool checkIsNeeded)
         {
@@ -754,8 +769,25 @@ namespace Library
             }
         }
 
-        
 
+        /// <summary>
+        /// CHECKS IF ENVIDO HAS BEEN CALLED PREVIOUSLY OR NOT. BASED ON THAT, DECIDES TO CALL ENVIDO OR HOW TO ANSWER TO A PREVIOUS ENVIDO
+        /// CALL. FINALLY MAKES THE CALL AND SETS THE BOOLEAN VARIABLES TO THEIR CORRESPONDING VALUES.
+        /// ---
+        /// CHEQUEA SI EL ENVIDO YA HA SIDO CANTADO PREVIAMENTE O NO. BASADO EN ESO, DECIDE CANTAR ENVIDO O COMO RESPONDER A UNA LLAMADA PREVIA
+        /// DE ENVIDO. FINALMENTE HACE EL LLAMADO Y SETEA LAS VARIABLES BOOLEANAS A SUS CORRESPONDIENTES VALORES.
+        /// </summary>
+        /// <param name="player1"></param>
+        /// <param name="player2"></param>
+        /// <param name="envidoCalled"></param>
+        /// <param name="envidoWanted"></param>
+        /// <param name="trucoCalled"></param>
+        /// <param name="player1EnvidoPoints"></param>
+        /// <param name="player2EnvidoPoints"></param>
+        /// <param name="currentPlayer"></param>
+        /// <param name="oponent"></param>
+        /// <param name="checkIsNeeded"></param>
+        /// <param name="isHand"></param>
         private void CheckForEnvido(Player player1, Player player2, ref bool envidoCalled, ref int envidoWanted, bool trucoCalled,
             ref int player1EnvidoPoints, ref int player2EnvidoPoints, Player currentPlayer, Player oponent, ref bool checkIsNeeded, Player isHand)
         {
@@ -814,7 +846,16 @@ namespace Library
         }
 
         
-
+        /// <summary>
+        /// RESOLVES THE ENVIDO BASED ON WHO'S HAND AND THE ENVIDO SCORE OF EACH PLAYER, ASSIGNING POINTS IF IT'S DUE.
+        /// ---
+        /// RESUELVE EL ENVIDO BASANDOSE EN QUIEN ES MANO Y EN LOS PUNTOS DE ENVIDO DE CADA JUGADOR, ASIGNANDO PUNTOS SI ES DEBIDO.
+        /// </summary>
+        /// <param name="player1"></param>
+        /// <param name="player2"></param>
+        /// <param name="player1EnvidoPoints"></param>
+        /// <param name="player2EnvidoPoints"></param>
+        /// <param name="isHand"></param>
         private void ResolveEnvido(Player player1, Player player2, int player1EnvidoPoints, int player2EnvidoPoints, Player isHand)
         {
             Announce(@" \b " + player1.Name + @"\b0:  " + player1EnvidoPoints.ToString() + @"  \line\line");
@@ -867,7 +908,13 @@ namespace Library
         }
 
         
-
+        /// <summary>
+        /// CALCULATES THE ENVIDO VALUE OF THE HAND AND RETURNS IT.
+        /// ---
+        /// CALCULA EL VALOR DE ENVIDO DE LA MANO Y LO RETORNA.
+        /// </summary>
+        /// <param name="hand"></param>
+        /// <returns></returns>
         private int CalculateEnvidoPoints(List<Card> hand)
         {
             int[] envidoPointsPerSuit = new int[4] { 0, 0, 0, 0 }; // cups, swords, golds, clubs
@@ -945,7 +992,16 @@ namespace Library
         }
 
         
-
+        /// <summary>
+        /// MAKES AND ANSWERS THE CALLS OF TRUCO AND ENVIDO. RETURNS THE VALUES BY REFERENCE.
+        /// ---
+        /// HACE Y RESPONDE LOS LLAMADOS DE TRUCO Y ENVIDO. RETORNA LOS VALORES POR REFERENCIA.
+        /// </summary>
+        /// <param name="currentPlayer"></param>
+        /// <param name="oponent"></param>
+        /// <param name="option"></param>
+        /// <param name="call"></param>
+        /// <param name="wanted"></param>
         private void Call(Player currentPlayer, Player oponent, int option, ref bool call, ref int wanted)
         {
             switch (option)
