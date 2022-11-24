@@ -21,7 +21,7 @@ namespace Main
         {
             InitializeComponent();
 
-            dataAccess = new DataAccess(GameMechanics.ConnectionString);
+            dataAccess = new DataAccess(SystemManager.ConnectionString);
             listOfRooms = new List<HistoryRoom>();
             roomsDataTable = new DataTable();
 

@@ -32,7 +32,7 @@ namespace Main
 
         private void PopulateCombobox()
         {
-            foreach(Player player in GameMechanics.Players)
+            foreach(Player player in SystemManager.Players)
             {
                 comboBox1.DisplayMember = "name";
                 comboBox1.Items.Add(player);
@@ -61,7 +61,7 @@ namespace Main
                 combo2.Text = string.Empty;
                 combo2.Items.Clear();
 
-                foreach (Player player in GameMechanics.Players)
+                foreach (Player player in SystemManager.Players)
                 {
                     if (player != comboBox1.SelectedItem)
                     {
@@ -87,8 +87,8 @@ namespace Main
                 gameType = GameType.Cards;
                 gameSubType = GameSubType.Truco;
 
-                roomName = "Room #" + (GameMechanics.ID + 1).ToString();
-                GameMechanics.ID++;
+                roomName = "Room #" + (SystemManager.ID + 1).ToString();
+                SystemManager.ID++;
 
                 newRoom = new Room(roomName, player1, player2, gameType, gameSubType, warning);
 

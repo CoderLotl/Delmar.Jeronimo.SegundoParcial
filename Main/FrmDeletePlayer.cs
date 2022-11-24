@@ -26,7 +26,7 @@ namespace Main
 
         private void DrawPlayersList()
         {
-            foreach (Player player in GameMechanics.Players)
+            foreach (Player player in SystemManager.Players)
             {
                 comboBox1.DisplayMember = "name";
                 comboBox1.Items.Add(player);

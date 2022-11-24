@@ -126,14 +126,14 @@ namespace Main
         {
             if (GameConcluded)
             {
-                GameMechanics.RemoveTrucoRoom(room, this.DrawTree);
+                SystemManager.RemoveTrucoRoom(room, this.DrawTree);
             }                
         }
 
         private void StartTimer()
         {
             int timer = 10;
-            DataAccess dataAccess = new DataAccess(GameMechanics.ConnectionString);
+            DataAccess dataAccess = new DataAccess(SystemManager.ConnectionString);
             DateTime dateTime;
             
 

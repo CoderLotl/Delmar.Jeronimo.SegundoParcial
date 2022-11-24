@@ -32,7 +32,7 @@ namespace Main
             playersDT.Columns.Add("Games Lost", typeof(int));
             playersDT.Columns.Add("Games Tied", typeof(int));
 
-            foreach(Player player in GameMechanics.Players)
+            foreach(Player player in SystemManager.Players)
             {
                 playersDT.Rows.Add(player.Name, player.GamesPlayed, player.GamesWon, player.GamesLost, player.GamesTied);
             }

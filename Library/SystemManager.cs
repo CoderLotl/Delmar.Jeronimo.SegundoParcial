@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace Library
 {
-    public static class GameMechanics
+    public static class SystemManager
     {
 
         private static List<Player> players;
@@ -20,7 +20,7 @@ namespace Library
 
         public static event Notify NotifyUpdate;
 
-        static GameMechanics()
+        static SystemManager()
         {
             ID = 0;
             rooms = new List<Room>();
@@ -48,22 +48,20 @@ namespace Library
         public static void AddTrucoRoom(Action<string> action)
         {
             Random randomNumber = new Random();
-            Player player1;
-            Player player2;
 
             ValidateInitialParamsToPlay();
 
-            player1 = players[randomNumber.Next(players.Count)];
+            Player player1 = players[randomNumber.Next(players.Count)];
 
-            player2 = ObtainPlayer2(player1);            
+            Player player2 = ObtainPlayer2(player1);            
             
-            string roomName = "Room #" + (GameMechanics.ID + 1).ToString();
+            string roomName = "Room #" + (SystemManager.ID + 1).ToString();
 
             Room newRoom = new Room(roomName, player1, player2, GameType.Cards, GameSubType.Truco, action);
 
             rooms.Add(newRoom);
 
-            GameMechanics.ID++;
+            SystemManager.ID++;
         }
 
         private static Player ObtainPlayer2(Player player1)

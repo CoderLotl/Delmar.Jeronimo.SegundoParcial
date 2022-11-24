@@ -369,7 +369,7 @@ namespace Library
         /// <param name="player2"></param>
         private void UpdatePlayersStats(Player player1, Player player2)
         {
-            DataAccess dataAccess = new DataAccess(GameMechanics.ConnectionString);
+            DataAccess dataAccess = new DataAccess(SystemManager.ConnectionString);
 
             if(dataAccess.TestConnection() == true)
             {

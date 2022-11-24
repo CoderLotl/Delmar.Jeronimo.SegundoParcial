@@ -25,9 +25,9 @@ namespace Main
 
             Initialize = new Task(() =>
             {
-                GameMechanics.NotifyUpdate += SetInitialize;
+                SystemManager.NotifyUpdate += SetInitialize;
 
-                GameMechanics.InitializeLists(Warning);
+                SystemManager.InitializeLists(Warning);
 
                 Invoke((MethodInvoker)(() => btn_CreateRoom.Enabled = true));
 
@@ -35,7 +35,7 @@ namespace Main
                 {
                     try
                     {
-                        GameMechanics.AddTrucoRoom(Warning);
+                        SystemManager.AddTrucoRoom(Warning);
                     }
                     catch (Exception exception)
                     {
@@ -43,7 +43,7 @@ namespace Main
                         return;
                     }
 
-                    GameMechanics.Rooms[i].NewGame.NotifyEndGame += EndGameHandler;
+                    SystemManager.Rooms[i].NewGame.NotifyEndGame += EndGameHandler;
                     if (InvokeRequired)
                     {
                         Invoke((MethodInvoker)(() => DrawTree()));
@@ -99,7 +99,7 @@ namespace Main
         {
             string newPlayerName;
             Player newPlayer;
-            DataAccess dataAccess = new DataAccess(GameMechanics.ConnectionString);
+            DataAccess dataAccess = new DataAccess(SystemManager.ConnectionString);
 
             FrmNewPlayer frmNewPlayer = new FrmNewPlayer();
 
@@ -114,7 +114,7 @@ namespace Main
                 newPlayer.GamesWon = 0;
                 newPlayer.GamesTied = 0;
 
-                GameMechanics.Players.Add(newPlayer);
+                SystemManager.Players.Add(newPlayer);
                 DrawPlayersList();
 
                 if (dataAccess.TestConnection() == true)
@@ -131,7 +131,7 @@ namespace Main
         private void btn_DeletePlayer_Click(object sender, EventArgs e)
         {
             Player newPlayer;
-            DataAccess dataAccess = new DataAccess(GameMechanics.ConnectionString);
+            DataAccess dataAccess = new DataAccess(SystemManager.ConnectionString);
 
             FrmDeletePlayer frmDeletePlayer = new FrmDeletePlayer();
 
@@ -144,7 +144,7 @@ namespace Main
                     if (dataAccess.TestConnection() == true)
                     {
                         dataAccess.DeletePlayer(newPlayer, Warning);
-                        GameMechanics.Players.Remove(newPlayer);
+                        SystemManager.Players.Remove(newPlayer);
                     }
                     else
                     {
@@ -172,7 +172,7 @@ namespace Main
             FrmAddRoom frmAddRoom = new(Warning);
             if (frmAddRoom.ShowDialog() == DialogResult.OK)
             {
-                GameMechanics.Rooms.Add(frmAddRoom.NewRoom);
+                SystemManager.Rooms.Add(frmAddRoom.NewRoom);
                 frmAddRoom.NewRoom.NewGame.NotifyEndGame += EndGameHandler;
 
                 //-----
@@ -217,9 +217,9 @@ namespace Main
             treeView1.Nodes.Clear();
 
             treeView1.Nodes.Add("Rooms");
-            if (GameMechanics.Rooms != null)
+            if (SystemManager.Rooms != null)
             {
-                foreach (Room room in GameMechanics.Rooms)
+                foreach (Room room in SystemManager.Rooms)
                 {
                     TreeNode newRoomNode = new TreeNode();
                     newRoomNode.Text = room.Name;
@@ -246,7 +246,7 @@ namespace Main
                 }
                 treeView1.Nodes[0].ExpandAll();
 
-                label1.Text = "Open rooms: " + GameMechanics.Rooms.Count;
+                label1.Text = "Open rooms: " + SystemManager.Rooms.Count;
             }
         }
 
@@ -294,7 +294,7 @@ namespace Main
 
         private void CreateForms()
         {
-            foreach (Room room in GameMechanics.Rooms)
+            foreach (Room room in SystemManager.Rooms)
             {
                 FrmRoom newViewForm = new FrmRoom(room, DrawTree, this.FormClose);
                 newViewForm.Name = room.Name;
@@ -308,9 +308,9 @@ namespace Main
         private void DrawPlayersList()
         {
             listBox1.Items.Clear();
-            if (GameMechanics.Players != null)
+            if (SystemManager.Players != null)
             {
-                foreach (Player player in GameMechanics.Players)
+                foreach (Player player in SystemManager.Players)
                 {
                     listBox1.DisplayMember = "name";
                     listBox1.Items.Add(player);
@@ -334,7 +334,7 @@ namespace Main
 
         private void FormClose(FrmRoom form)
         {
-            GameMechanics.Rooms.Remove(form.Room);
+            SystemManager.Rooms.Remove(form.Room);
             viewForms.Remove(form);
             if (InvokeRequired)
             {
@@ -382,7 +382,7 @@ namespace Main
         {
             bool playerIsPlaying = false;
 
-            foreach(Room room in GameMechanics.Rooms)
+            foreach(Room room in SystemManager.Rooms)
             {
                 foreach(Player playerInRoom in room.Players)
                 {

@@ -67,7 +67,7 @@ namespace Library
                     playerList.Add(newPlayer);
                 }
 
-                GameMechanics.Players = playerList;
+                SystemManager.Players = playerList;
                 action("Database loaded successfully.");                
             }
 
@@ -101,7 +101,7 @@ namespace Library
                 Player newPlayer = new Player(i + 1, names[i], 0, 0, 0, 0);
                 playerList.Add(newPlayer);
             }
-            GameMechanics.Players = playerList;
+            SystemManager.Players = playerList;
         }
 
         /// <summary>
@@ -389,20 +389,26 @@ namespace Library
         /// <returns></returns>
         public bool TestConnection()
         {
-            bool connectionOk;
+            bool connectionOk = true;
+            SqlConnection connection = new SqlConnection(this.connectionString);
 
             try
-            {
-                SqlConnection connection = new SqlConnection(this.connectionString);
-
+            {                
+                connection.Open();
                 connectionOk = true;
-                return connectionOk;
             }
             catch
             {
                 connectionOk = false;
-                return connectionOk;
-            }            
+            }
+            finally
+            {
+                if (connection.State == System.Data.ConnectionState.Open)
+                {
+                    connection.Close();
+                }
+            }
+            return connectionOk;
         }
     }
 }
