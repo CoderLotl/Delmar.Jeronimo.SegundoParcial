@@ -48,7 +48,16 @@ namespace Library
         }
 
 
-
+        /// <summary>
+        /// RETURNS A FULLY INSTANTIATED DECK.
+        /// FIRST THE METHOD TRIES TO RETRIEVE A DECK FROM A JSON FILE. IF THERE'S NO FILE IN THE PARENT DIRECTORY
+        /// THE METHOD CREATES A DECK AND THEN SERIALIZES THE FILE. THEN RETURNS THE DECK.
+        /// ---
+        /// RETORNA UN MAZO COMPLETAMENTE INSTANCIADO.
+        /// EL METODO PRIMERO INTENTA DEVOLVER UN MAZO DESDE UN ARCHIVO JSON. SI EL ARCHIVO NO ESTA EN EL DIRECTORIO
+        /// EL METODO CREA UN MAZO Y LUEGO LO SERIALIZA. DEVUELVE EL MAZO.
+        /// </summary>
+        /// <returns></returns>
         public List<Card> GenerateDeck()
         {
             List<Card> newDeck;
@@ -85,8 +94,14 @@ namespace Library
             return newDeck;
         }
 
-        
-
+        /// <summary>
+        /// SHUFFLES A FULL DECK AND RETURNS IT ONCE THE CARDS HAVE BEEN SHUFFLED.
+        /// ---
+        /// MEZCLA UN MAZO Y LO DEVUELVE UNA VEZ MEZCLADO.
+        /// </summary>
+        /// <param name="deck"></param>
+        /// <returns></returns>
+        /// <exception cref="ArgumentNullException"></exception>
         public List<Card> ShuffleDeck(List<Card> deck)
         {
             List<Card> shuffledDeck = new List<Card>();
@@ -113,7 +128,14 @@ namespace Library
         }
 
         
-
+        /// <summary>
+        /// CALCULATE THE RELATIVE VALUE OF THE CARD.
+        /// ---
+        /// CALCULA EL VALOR RELATIVO DE LA CARTA.
+        /// </summary>
+        /// <param name="rank"></param>
+        /// <param name="suit"></param>
+        /// <returns></returns>
         private static int CalculateRelativeValue(int rank, Suit suit)
         {
             int relativeValue = 0;
@@ -165,7 +187,14 @@ namespace Library
         }
 
         
-
+        /// <summary>
+        /// PICKS A CARD FROM THE DECK AND PLACES IT IN THE PLAYER'S HAND.
+        /// ---
+        /// TOMA UNA CARTA DEL MAZO Y LA COLOCA EN LA MANO DEL JUGADOR.
+        /// </summary>
+        /// <param name="playerCards"></param>
+        /// <param name="deck"></param>
+        /// <exception cref="EmptyDeckException"></exception>
         public void DrawCard(List<Card> playerCards, List<Card> deck)
         {
             if (deck.Count > 0)
@@ -180,7 +209,13 @@ namespace Library
         }
 
         
-
+        /// <summary>
+        /// GIVES 3 CARDS TO THE PLAYER, PLACING THEM IN THE PLAYER'S HAND.
+        /// ---
+        /// LE DA 3 CARTAS AL JUGADOR, COLOC'ANDOLAS EN LA MANO DEL JUGADOR.
+        /// </summary>
+        /// <param name="deck"></param>
+        /// <param name="playerCards"></param>
         public void GiveCards(List<Card> deck, List<Card> playerCards)
         {            
             int cards = deck.Count;
@@ -194,7 +229,14 @@ namespace Library
         }
 
         
-
+        /// <summary>
+        /// PLAYS A RANDOM CARD AND PLACES IT DOWN IN THE GIVEN STACK OF CARDS.
+        /// ---
+        /// JUEGA UNA CARTA AL AZAR Y LA COLOCA EN EL STACK DE CARTAS DESIGNADO.
+        /// </summary>
+        /// <param name="player"></param>
+        /// <param name="hand"></param>
+        /// <param name="tableStack"></param>
         public void PlayCard(Player player, List<Card> hand, List<Card> tableStack)
         {
             Random randomNum = new Random();
@@ -209,7 +251,11 @@ namespace Library
         }
 
         
-
+        /// <summary>
+        /// RESETS THE PLAYER'S HAND AND THE CARDS THE PLAYER PLAYED, RETURNING ALL THE CARDS TO THE DECK.
+        /// ---
+        /// RESETEA LA MANO DEL JUGADOR Y LAS CARTAS QUE JUGO, DEVOLVIENDOLAS AL MAZO.
+        /// </summary>
         public override void EndRound()
         {
             this.PlayedPlayerOne.ForEach(card => this.Deck.Add(card));
@@ -224,7 +270,11 @@ namespace Library
         }
 
         
-
+        /// <summary>
+        /// SETS THE CANCEL TOKEN TO TRUE. ANNOUNCES THE IMMINENT END OF THE GAME.
+        /// ---
+        /// SETEA EL CANCEL TOKEN A VERDADERO. ANUNCIA EL FINAL INMINENTE DEL JUEGO.
+        /// </summary>
         public override void EndGame()
         {
             this.CancelToken.Cancel();
@@ -233,7 +283,11 @@ namespace Library
         }
 
         
-
+        /// <summary>
+        /// STARTS PLAYING THE GAME.
+        /// ---
+        /// COMIENZA A JUGAR EL JUEGO.
+        /// </summary>
         public override void Play()
         {
             Player playerOne = this.Player1;
@@ -261,6 +315,14 @@ namespace Library
 
         }
 
+
+        /// <summary>
+        /// DECIDES THE WINNER BASED ON THEIR SCORE AND ADDS THE CORRESPONDING POINTS TO THEIR COUNTERS.
+        /// ---
+        /// DECIDE EL GANADOR BASADO EN SU PUNTAJE Y AGREGA LOS PUNTOS CORRESPONDIENTES A SUS CONTADORES.
+        /// </summary>
+        /// <param name="player1"></param>
+        /// <param name="player2"></param>
         private void DecideWinner(Player player1, Player player2)
         {
             player1.GamesPlayed++;
@@ -293,7 +355,15 @@ namespace Library
         }
 
         
-
+        /// <summary>
+        /// CONNECTS TO THE DATABASE AND UPDATES THE PLAYERS'S STATISTICS. - IF THE DATABASE IS UNREACHABLE
+        /// THE METHOD POPS A MESSAGEBOX INFORMING THE USER ABOUT THIS.
+        /// ---
+        /// SE CONECTA CON LA BASE DE DATOS Y ACTUALIZA LAS ESTADISTICAS DE LOS JUGADORES. - SI LA BASE DE DATOS ES INALCANZABLE
+        /// EL METODO LANZA UNA VENTANA INFORMANDO AL USUARIO SOBRE ESTO.
+        /// </summary>
+        /// <param name="player1"></param>
+        /// <param name="player2"></param>
         private void UpdatePlayersStats(Player player1, Player player2)
         {
             DataAccess dataAccess = new DataAccess(GameMechanics.ConnectionString);
@@ -310,7 +380,15 @@ namespace Library
         }
 
         
-
+        /// <summary>
+        /// CHOOSES THE PLAYER ONE AND TWO AT RANDOM.
+        /// ---
+        /// ELIGE EL JUGADOR UNO Y DOS AL AZAR.
+        /// </summary>
+        /// <param name="player1"></param>
+        /// <param name="player2"></param>
+        /// <param name="playerOne"></param>
+        /// <param name="playerTwo"></param>
         private void ChoosePlayerOne(Player player1, Player player2, out Player playerOne, out Player playerTwo)
         {
             Random coin = new Random();
@@ -329,7 +407,13 @@ namespace Library
         }
 
         
-
+        /// <summary>
+        /// ADDS SOME TEXT TO THE LOG AND THE CLEAN LOG. - THE CLEAN LOG HAS NO RTF FORMAT, WHILE THE LOG HAS.
+        /// ---
+        /// AGREGA ALGUN TEXTO AL LOG Y AL LOG LIMPIO. - EL LOG LIMPIO NO TIENE FORMATO DE TEXTO ENRIQUECIDO,
+        /// MIENTRAS QUE EL LOG SI.
+        /// </summary>
+        /// <param name="text"></param>
         private void Announce(string text)
         {
             this.CleanLog += text;
@@ -338,7 +422,13 @@ namespace Library
         }
 
         
-
+        /// <summary>
+        /// PLAYS A ROUND BETWEEN 2 PLAYERS.
+        /// ---
+        /// JUEGA UNA RONDA ENTRE 2 JUGADORES.
+        /// </summary>
+        /// <param name="player1"></param>
+        /// <param name="player2"></param>
         private void PlayRound(Player player1, Player player2)
         {
             bool winnerRound = false;
@@ -401,6 +491,14 @@ namespace Library
             Announce(@"----------------------------------------------------------- \line");
         }
 
+
+        /// <summary>
+        /// ANNOUNCES THE PREAMBLE OF THE GAME, SHOWING THE CARDS DRAWN OF EACH PLAYER.
+        /// ---
+        /// ANUNCIA EL PREAMBULO DEL JUEGO, MOSTRANDO LAS CARTAS SACADAS DE CADA JUGADOR.
+        /// </summary>
+        /// <param name="player1"></param>
+        /// <param name="player2"></param>
         private void AnnounceRoundPreamble(Player player1, Player player2)
         {
             Announce(@" \b Round " + this.Turn + @"\b0.\line\line"); // I ANNOUNCE THE START OF THE TURN            
@@ -436,7 +534,20 @@ namespace Library
         }
 
         
-
+        /// <summary>
+        /// CHECKS AND ANNOUNCES THE WINNER OF THE HAND.
+        /// ---
+        /// CHEQUEA Y ANUNCIA EL GANADOR DE LA MANO.
+        /// </summary>
+        /// <param name="player1"></param>
+        /// <param name="player2"></param>
+        /// <param name="lastToPlay"></param>
+        /// <param name="isHand"></param>
+        /// <param name="checkIsNeeded"></param>
+        /// <param name="player1HandScore"></param>
+        /// <param name="player2HandScore"></param>
+        /// <param name="winnerRound"></param>
+        /// <param name="trucoWanted"></param>
         private void CheckThisHandWinner(Player player1, Player player2, ref Player lastToPlay, ref Player isHand, ref bool checkIsNeeded,
             ref int player1HandScore, ref int player2HandScore, ref bool winnerRound, int trucoWanted)
         {
@@ -494,8 +605,6 @@ namespace Library
                     }
                 }                
 
-                
-
                 if(player1HandScore >= 2 || player2HandScore >= 2)
                 {
                     if(player1HandScore >= 2)
@@ -543,7 +652,25 @@ namespace Library
         }
 
         
-
+        /// <summary>
+        /// PLAYS THE TURN OF THE CURRENT PLAYER. ANSWERS THE CALLS, MAKES CALLS, AND PLAYS A CARD.
+        /// ---
+        /// JUEGA EL TURNO DEL JUGADOR ACTUAL. RESPONDE LLAMADOS, HACE LLAMADOS, Y JUEGA UNA CARTA.
+        /// </summary>
+        /// <param name="player1"></param>
+        /// <param name="player2"></param>
+        /// <param name="lastToPlay"></param>
+        /// <param name="isHand"></param>
+        /// <param name="playerOrder"></param>
+        /// <param name="tableStack"></param>
+        /// <param name="envidoCalled"></param>
+        /// <param name="envidoWanted"></param>
+        /// <param name="trucoCalled"></param>
+        /// <param name="trucoWanted"></param>
+        /// <param name="player1EnvidoPoints"></param>
+        /// <param name="player2EnvidoPoints"></param>
+        /// <param name="winnerRound"></param>
+        /// <param name="checkIsNeeded"></param>
         private void PlayTurnOfPlayer(Player player1, Player player2, ref Player lastToPlay, Player isHand, int playerOrder, List<Card> tableStack,
             ref bool envidoCalled, ref int envidoWanted, ref bool trucoCalled, ref int trucoWanted, ref int player1EnvidoPoints,
             ref int player2EnvidoPoints, ref bool winnerRound, ref bool checkIsNeeded)
