@@ -166,3 +166,9 @@ Ona vez que un juego finaliza, la representación visual del cuarto en el Lobby 
 En el mismo momento que el juego finaliza, éste actualiza las estadísticas de los jugadores y luego intenta actualizarlas en la Base de Datos.
 
 El usuario puede optar por crear cualquier número de jugadores nuevos, los cuales son inmediatamente cargaods a la Base de Datos en el momento en que son creados, en la misma que también se puede borrar cualquier jugador.
+
+* Reglas:
+
+Las reglas usadas en esta versión de Truco son sumamente básicas. Los jugadores pueden cantar tanto Envido como Truco en cualquier punto, pero no pueden cantar Truco si Envido no ha sido cantado previamente. Cantarán y jugarán cartas de forma no inteligente, simplemente basándose en chances, así que no hay para nada jugadas inteligentes. - Las respuestas a los cantos también son aleatorias. En el fondo de todo esto, no hay ningún tipo de individualidad para los "jugadores", ya que ellos no son otra cosa que nombres. Todo son simplemente un juego de métodos y variables.
+
+Si Envido fue cantado y no querido, el que canta gana 1 punto. Si Truco fue cantado y no querido, el que canta gana 1 punto y la ronda termina con el que cantó saliendo como ganador de la ronda. Si Envido es querido, entonces los puntos de las manos de los jugadores son comparados y el ganador gana el punto. - Si la ronda termina y Truco ha sido cantado y querido en algún punto, el ganador gana 2 puntos. Si nada fue cantado en ninguna instancia del juego, el jugador que gana 2 manos de 3 gana el punto de la ronda.
