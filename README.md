@@ -4,7 +4,7 @@
 
 [English](#english) :gb:
 
-[Spanish](#español) :es:
+[Español](#español) :es:
 
 ---
 ---
