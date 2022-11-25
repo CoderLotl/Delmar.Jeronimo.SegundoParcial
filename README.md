@@ -2,6 +2,14 @@
 
 ---
 
+[English](#english) :gb:
+
+[Spanish](#español) :es:
+
+---
+---
+# English
+
 ### Title: *"Simple Truco"*
 
 ---
@@ -15,7 +23,7 @@ When one presses double-click on the room, a new form opens and allows the user 
 Games are set to 4 rounds, each of which consists of 3 hands or less, depending on if someone wins the round before reaching the 3rd hand or not.
 
 All games can be closed either from "outside", at the Lobby, or from "inside" at the **view form**.
-Once a game finishes, the visual representation of the room at the Lobby changes to reflect this, same as the name of the room and the title of the view form. - A timer of 120 seconds long starts then, allowing the user to explore the events of the game in the text box if they want, then without mattering if the view form is opened or closed, the same is disposed and the game removed from the list of active games, putting it apart for the GC to take care of it.
+Once a game finishes, the visual representation of the room at the Lobby changes to reflect this, same as the name of the room and the title of the view form. - A timer of 10 seconds long starts then, allowing the user to explore the events of the game in the text box if they want, then without mattering if the view form is opened or closed, the same is disposed and the game removed from the list of active games, putting it apart for the GC to take care of it.
 
 The very moment the game finishes, it updates the statistics of the players and then tries to update them at the Data Base.
 
@@ -136,4 +144,25 @@ I tried to change this set of mind during this TP, but I couldn't. I understand 
 
 * The program is not written based on the MVP model only because I was already by the 50% of it when that model whas shown in class. Shame on me :(
 
+---
 
+# Español
+
+### Título: *"Simple Truco"*
+
+---
+
+* Resumen:
+
+El programa consiste en una aplicación multi-hilo la cual puede crear múltiples, virtualmente ilimitados, cuartos en donde 2 "bots" juegan Truco el uno contra el otro usando una versión muy simplista del juego de cartas *Truco*.
+Cuando el juego comienza intenta conectarse con la Base de Datos y cargar todos los jugadores allí al juego, y luego automáticamente crea 1 cuarto en donde 2 bots son elegidos para jugar el uno contra el otro, de forma que se pueda ver de qué trata el programa.
+Cuando uno presiona doble-click en el cuarto, un nuevo formulario se abre y permite al usuario ver qué está ocurriendo dentro del cuarto. - El formulario puede ser movido por la pantalla sin afectar el juego y puede incluso ser cerrado sin que esto detenga el juego dentro del cuarto.
+
+Los juegos están seteados a 4 rondas, cada una consiste de 3 manos o menos, dependiendo de si alguien gana la ronda antes de alcanzar la 3er mano o no.
+
+Todos los juegos pueden ser cerrados desde "afuera", en el Lobby, o desde "adentro" en el **formulario de vista**.
+Ona vez que un juego finaliza, la representación visual del cuarto en el Lobby cambia para reflejar esto, lo mismo que el nombre del cuarto y el título del formulario de vista. - Un timer de 10 segundos comienza entonces, permitiendo al usuario explorar los eventos del juego en el cuadro de texto si él/ella/elle quiere, luego sin importar si el formulario de vista está abierto o cerrado, el mismo es descatado y el juego removido de la lista de juegos activos, colocándolo aparte para que el Garbage Collector se encargue de él.
+
+En el mismo momento que el juego finaliza, éste actualiza las estadísticas de los jugadores y luego intenta actualizarlas en la Base de Datos.
+
+El usuario puede optar por crear cualquier número de jugadores nuevos, los cuales son inmediatamente cargaods a la Base de Datos en el momento en que son creados, en la misma que también se puede borrar cualquier jugador.
