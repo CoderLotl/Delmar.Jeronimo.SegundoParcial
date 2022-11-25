@@ -51,23 +51,20 @@ If nothing is called at any stance of the game, the player that wins 2 hands out
 
 ### SQL
 
-It's used to read data from the Data Base and write data on the Data Base, specifically related to Players.
+It's used to read data from the Data Base and write data on the Data Base, specifically related to Players and the Matches.
 At the beginning of the application the same creates an instance of the Data Access class to read all the players from the Data Base, and then it's used again every time any operation of writing or reading data to or from the Data Base is performed.
 
 ### EXCEPTIONS
 
-It's lightly used in the program, given the fact that most methods are fail-proof in the tightly controlled and unflexible data environment.
-This becomes handy, anyway, when some aspects are impossible to be accurately forseen and controlled, like when then program needs to contact the Data Base, or when it needs to make use of some file which its existence is not granted.
-If by any chance these methods happen to fail, they will throw an exception which will cause a message box to promp and warn the user about the situation.
-This subject is therefore used in 2 classes: Data Access (used for SQL querys) and Data Serialization (for serializing and deserializing data to and from files).
+Exceptions are used every time the execution of some method or code has a chance of throwing an exception in their normal running due to an unexpected issued, which is contemplated and properly caught.
+In most cases, this ends informing the user about the issue when the exception may alter the normal running and flow of the application. Some exceptions may prevent some features of being executed. - At some other cases, the exceptions are dealt with by returning some value to other areas of the program.
+
+There's an specific case in which a custom exception had to be created and implemented, due to the fact that the specific case was not contemplated by the language. This is the case of empty decks.
 
 ### GENERICS
 
 This subject is actively used and actually a core aspect of the serialization and deserialization of data.
-Although the game makes no use of it for anything other than cards, for when it has to make a new deck for a new game, the whole class is prepared for interacting with any kind of data, which it can serialize down to a file or deserialize back from a file to data.
-
-NOTE: ... and although I didn't use this any further in this TP, in the moments of boredom when I switched to personal projects I made a wide use of this.
-This is just a color note here; I wanted to thank you for this.
+Although the game makes no use of it for anything other than cards and logs of matches, for when it has to make a new deck for a new game or to save a class containing the data of the finished match, the whole class is prepared for interacting with any kind of data, which it can serialize down to a file or deserialize back from a file to data.
 
 ### SERIALIZATION AND FILE WRITING
 
@@ -167,8 +164,35 @@ En el mismo momento que el juego finaliza, éste actualiza las estadísticas de 
 
 El usuario puede optar por crear cualquier número de jugadores nuevos, los cuales son inmediatamente cargaods a la Base de Datos en el momento en que son creados, en la misma que también se puede borrar cualquier jugador.
 
-* Reglas:
+* REGLAS:
 
 Las reglas usadas en esta versión de Truco son sumamente básicas. Los jugadores pueden cantar tanto Envido como Truco en cualquier punto, pero no pueden cantar Truco si Envido no ha sido cantado previamente. Cantarán y jugarán cartas de forma no inteligente, simplemente basándose en chances, así que no hay para nada jugadas inteligentes. - Las respuestas a los cantos también son aleatorias. En el fondo de todo esto, no hay ningún tipo de individualidad para los "jugadores", ya que ellos no son otra cosa que nombres. Todo son simplemente un juego de métodos y variables.
 
 Si Envido fue cantado y no querido, el que canta gana 1 punto. Si Truco fue cantado y no querido, el que canta gana 1 punto y la ronda termina con el que cantó saliendo como ganador de la ronda. Si Envido es querido, entonces los puntos de las manos de los jugadores son comparados y el ganador gana el punto. - Si la ronda termina y Truco ha sido cantado y querido en algún punto, el ganador gana 2 puntos. Si nada fue cantado en ninguna instancia del juego, el jugador que gana 2 manos de 3 gana el punto de la ronda.
+
+---
+
+## **DIAGRAMA DE CLASES**
+![alt text](ClassDiagram1.png)
+
+---
+
+* Temas y su uso:
+
+### SQL
+
+Es utilizado para leer datos de la Base de Datos y escribir datos en la Base de Datos, específicamente relacionado a los Jugadores y las Partidas.
+Al comienzo mismo de la aplicación la misma crea una instancia de la clase Data Access para leer todos los jugadores de la Base de Datos, y luego es usado de nuevo en cada operación de escritura o lectura de datos desde o en la Base de Datos.
+
+### EXCEPCIONES
+
+Las excepciones son usadas cada vez que la ejecución de algún método o código tiene algúna  chance de tirar una excepción en su normal funcionamiento debido a problema inesperado, lo cual es contemplado y capturado apropiadamente.
+En la mayoría de los casos, esto termina informando al usuario acerca del inconveniente cuando la excepción altere el normal desempeño y flujo de la aplicación. Algunas excepciones pueden prevenir ciertas características de ser ejecutadas. - En algunos casos, las excepciones son tratadas devolviendo algún valor a otras áreas del programa.
+
+Hay un caso particular en el cual una excepción personalizada debió ser creada e implementada, debido a que el caso específico no estaba contemplado por el lenguaje. Este es el cazo de los mazos vacíos.
+
+### GENÉRICOS
+
+Este tema es activamente usado y actualmente un aspecto principal de la serialización y deserialización de datos.
+Aunque el juego no hace uso de ello para otra cosa distinta a las cartas y los logs de las partidas, para cuando tiene que hacer un nuevo mazo para un nuevo juego o cuando tiene que guardar una glase conteniendo los datos de la partida finalizada, la clase entera (la clase serializadora) está preparada para interactuar con cualquier tipo de datos, los cuales puede serializar en un archivo o deserializar de regreso de un archivo a datos.
+
