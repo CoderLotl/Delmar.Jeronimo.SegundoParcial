@@ -133,7 +133,7 @@ namespace Library
 
         
         /// <summary>
-        /// CALCULATE THE RELATIVE VALUE OF THE CARD.
+        /// CALCULATES THE RELATIVE VALUE OF THE CARD.
         /// ---
         /// CALCULA EL VALOR RELATIVO DE LA CARTA.
         /// </summary>
