@@ -106,24 +106,30 @@ namespace Main
             if (frmNewPlayer.ShowDialog() == DialogResult.OK)
             {
                 newPlayerName = frmNewPlayer.NewPlayer;
-
-                newPlayer = new();
-                newPlayer.Name = newPlayerName;
-                newPlayer.GamesPlayed = 0;
-                newPlayer.GamesLost = 0;
-                newPlayer.GamesWon = 0;
-                newPlayer.GamesTied = 0;
-
-                SystemManager.Players.Add(newPlayer);
-                DrawPlayersList();
-
-                if (dataAccess.TestConnection() == true)
+                if (!string.IsNullOrWhiteSpace( newPlayerName))
                 {
-                    dataAccess.InsertPlayer(newPlayer, Warning);
+                    newPlayer = new();
+                    newPlayer.Name = newPlayerName;
+                    newPlayer.GamesPlayed = 0;
+                    newPlayer.GamesLost = 0;
+                    newPlayer.GamesWon = 0;
+                    newPlayer.GamesTied = 0;
+
+                    SystemManager.Players.Add(newPlayer);
+                    DrawPlayersList();
+
+                    if (dataAccess.TestConnection() == true)
+                    {
+                        dataAccess.InsertPlayer(newPlayer, Warning);
+                    }
+                    else
+                    {
+                        Warning("Unable to connect with the Database.\nThe player won't be written into it.");
+                    }
                 }
                 else
                 {
-                    Warning("Unable to connect with the Database.\nThe player won't be written into it.");
+                    Warning("The Player has no name.");
                 }
             }
         }

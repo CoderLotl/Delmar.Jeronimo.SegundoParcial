@@ -57,7 +57,11 @@ namespace Library
         /// EL METODO PRIMERO INTENTA DEVOLVER UN MAZO DESDE UN ARCHIVO JSON. SI EL ARCHIVO NO ESTA EN EL DIRECTORIO
         /// EL METODO CREA UN MAZO Y LUEGO LO SERIALIZA. DEVUELVE EL MAZO.
         /// </summary>
-        /// <returns></returns>
+        /// <returns>
+        /// RETURNS A NEW DECK.
+        /// ---
+        /// DEVUELVE UN NUEVO MAZO.
+        /// </returns>
         public List<Card> GenerateDeck()
         {
             List<Card> newDeck;
